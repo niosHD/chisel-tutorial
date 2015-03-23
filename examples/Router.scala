@@ -2,6 +2,7 @@ package TutorialExamples
 
 import Chisel._
 import Literal._;
+import Chisel.Library._
 
 class ReadCmd extends Bundle {
   val addr = UInt(width = 32);

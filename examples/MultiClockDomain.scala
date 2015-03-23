@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.Library._
 import scala.collection.mutable.HashMap
 import scala.math._
 
