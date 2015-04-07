@@ -4,7 +4,4 @@
 
 val chiselVersion_h = System.getProperty("chiselVersion", "latest.release")
 
-libraryDependencies ++= ( if (chiselVersion_h != "None" ) {
-  List("chisel", "chisel_library") map ("edu.berkeley.cs" %% _ % chiselVersion_h)
- } else Nil
-)
+libraryDependencies ++= ( if (chiselVersion_h != "None" ) ("edu.berkeley.cs" %% "chisel" % chiselVersion_h) :: Nil; else Nil)
