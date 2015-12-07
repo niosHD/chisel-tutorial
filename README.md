@@ -1,7 +1,7 @@
 Chisel Tutorials
 ================
 
-These are the tutorials for [Chisel](https://github.com/ucb-bar/chisel).
+These are the tutorials for [Chisel](https://github.com/ucb-bar/chisel3).
 
 Chisel is an open-source hardware construction language developed
 at UC Berkeley that supports advanced hardware design using highly
