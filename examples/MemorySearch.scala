@@ -24,7 +24,7 @@ class MemorySearch extends Module {
 }
 
 class MemorySearchTests(c: MemorySearch) extends Tester(c) {
-  val list = c.elts.map(int(_)) 
+  val list = c.elts.map(int(_))
   val n = 8
   val maxT = n * (list.length + 3)
   for (k <- 0 until n) {
@@ -37,7 +37,7 @@ class MemorySearchTests(c: MemorySearch) extends Tester(c) {
       step(1)
     } while (peek(c.io.done) == 0 && t < maxT)
     val addr = peek(c.io.address).toInt
-    expect(addr == list.length || list(addr) == target, 
+    expect(addr == list.length || list(addr) == target,
            "LOOKING FOR " + target + " FOUND " + addr)
   }
 }
