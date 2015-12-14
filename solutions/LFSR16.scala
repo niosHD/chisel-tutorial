@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers.UnitTester
 
 class LFSR16 extends Module {
   val io = new Bundle {
@@ -15,7 +16,8 @@ class LFSR16 extends Module {
   io.out := res
 }
 
-class LFSR16Tests(c: LFSR16) extends Tester(c) {
+class LFSR16Tests extends UnitTester {
+  val c = Module( new LFSR16 )
   var res = 1
   for (t <- 0 until 16) {
     val inc = rnd.nextInt(2)
@@ -26,5 +28,6 @@ class LFSR16Tests(c: LFSR16) extends Tester(c) {
       res = (res >> 1) | (bit << 15);
     }
     expect(c.io.out, res)
+    install(c)
   }
 }
