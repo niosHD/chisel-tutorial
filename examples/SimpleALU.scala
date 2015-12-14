@@ -52,7 +52,8 @@ class SimpleALU extends Module {
   }
 }
 
-class SimpleALUTests(c: SimpleALU) extends Tester(c) {  
+class SimpleALUUnitTester extends UnitTester {
+  val c = Module(new SimpleALU)
   for (n <- 0 until 64) {
     val a      = rnd.nextInt(16)
     val b      = rnd.nextInt(16)
@@ -73,8 +74,9 @@ class SimpleALUTests(c: SimpleALU) extends Tester(c) {
         poke(c.io.a, a)
         poke(c.io.b, b)
         poke(c.io.opcode, opcode)
-        step(1)
         expect(c.io.out, output)
+        step(1)
   }
       // }}}
+  install(c)
 }

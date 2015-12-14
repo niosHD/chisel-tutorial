@@ -35,15 +35,17 @@ class FIR extends Module {
 }
 */
 
-class FIRTests(c: FIR) extends Tester(c) {
+class FIRUnitTester extends UnitTester {
+  val c = Module(new FIR)
   var px = 0.0f
   for (i <- 0 until 10) {
     val x = rnd.nextFloat()
-    poke(c.io.x, x)
+    poke(c.io.x, x.toInt)
     val res = x * c.ws(0).floLitValue + px * c.ws(1).floLitValue
     println("TST X = " + x + " RES = " + res);
-    expect(c.io.z, res)
+    expect(c.io.z, res.toInt)
     step(1)
     px  = x
   }
+  install(c)
 }

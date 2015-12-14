@@ -42,16 +42,18 @@ class Router extends Module {
   } 
 }
 
-class RouterTests(c: Router) extends Tester(c) {  
+class RouterUnitTester extends UnitTester {
+  val c = Module(new Router)
   def rd(addr: Int, data: Int) = {
     poke(c.io.in.valid,        0)
     poke(c.io.writes.valid,    0)
     poke(c.io.reads.valid,     1)
     poke(c.io.replies.ready,   1)
     poke(c.io.reads.bits.addr, addr)
-    step(1)
     expect(c.io.replies.bits, data)
+    step(1)
   }
+
   def wr(addr: Int, data: Int)  = {
     poke(c.io.in.valid,         0)
     poke(c.io.reads.valid,      0)
@@ -60,12 +62,7 @@ class RouterTests(c: Router) extends Tester(c) {
     poke(c.io.writes.bits.data, data)
     step(1)
   }
-  def isAnyValidOuts(): Boolean = {
-    for (out <- c.io.outs)
-      if (peek(out.valid) == 1)
-        return true
-    false
-  }
+
   def rt(header: Int, body: Int)  = {
     for (out <- c.io.outs)
       poke(out.ready, 1)
@@ -74,15 +71,20 @@ class RouterTests(c: Router) extends Tester(c) {
     poke(c.io.in.valid,       1)
     poke(c.io.in.bits.header, header)
     poke(c.io.in.bits.body,   body)
-    var i = 0
-    do {
-      step(1)
-      i += 1
-    } while (!isAnyValidOuts() || i > 10)
-    expect(i < 10, "FIND VALID OUT")
+    for (out <- c.io.outs) {
+      when(out.valid) {
+        printf("io.valid, io.pc %d\n", io.pc)
+        setDone := Bool(true)
+//      stop(0)
+      } otherwise {
+        step(1)
+      }
+    }
+//    expect(io.pc < UInt(10))
   }
   rd(0, 0)
   wr(0, 1)
   rd(0, 1)
   rt(0, 1)
+  install(c)
 }

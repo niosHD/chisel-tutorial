@@ -30,10 +30,12 @@ class Stack(val depth: Int) extends Module {
     }
   }
 
+  printf("sp 0x%x, out 0x%x\n", sp, out)
   io.dataOut := out
 }
 
-class StackTests(c: Stack) extends Tester(c) {  
+class StackUnitTester(val depth: Int) extends UnitTester {
+  val c = Module(new Stack(depth))
   var nxtDataOut = 0
   var dataOut = 0
   val stack = new ScalaStack[Int]()
@@ -62,7 +64,9 @@ class StackTests(c: Stack) extends Tester(c) {
     poke(c.io.dataIn, dataIn)
     step(1)
     expect(c.io.dataOut, dataOut)
+    step(1)
   }
+  install(c)
 }
 
 

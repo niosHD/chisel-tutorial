@@ -19,14 +19,37 @@ class GCD extends Module {
   io.v := y === UInt(0)
 }
 
-class GCDTests(c: GCD) extends Tester(c) {
+class GCDUnitTester extends UnitTester {
+  def compute_gcd(a: Int, b: Int): Tuple2[Int, Int] = {
+    var x = a
+    var y = b
+    var depth = 1
+    while(y > 0 ) {
+      if (x > y) {
+        x -= y
+      }
+      else {
+        y -= x
+      }
+      depth += 1
+    }
+    return (x, depth)
+  }
+
   val (a, b, z) = (64, 48, 16)
-  do {
-    val first = if (t == 0) 1 else 0;
-    poke(c.io.a, a)
-    poke(c.io.b, b)
-    poke(c.io.e, first)
-    step(1)
-  } while (t <= 1 || peek(c.io.v) == 0)
-  expect(c.io.z, z)
+  val gcd = Module(new GCD)
+
+  poke(gcd.io.a, a)
+  poke(gcd.io.b, b)
+  poke(gcd.io.e, 1)
+  step(1)
+  poke(gcd.io.e, 0)
+
+  val (expected_gcd, steps) = compute_gcd(a, b)
+
+  step(steps-1) // -1 is because we step(1) already to toggle the enable
+  expect(gcd.io.z, expected_gcd)
+  expect(gcd.io.v, 1 )
+
+  install(gcd)
 }

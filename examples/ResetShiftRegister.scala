@@ -22,7 +22,8 @@ class ResetShiftRegister extends Module {
   io.out := r3
 }
 
-class ResetShiftRegisterTests(c: ResetShiftRegister) extends Tester(c) {
+class ResetShiftRegisterUnitTester extends UnitTester {
+  val c = Module(new ResetShiftRegister)
   val ins = Array.fill(4){ 0 }
   val regs = Array.fill(4){ 0 }
   var k   = 0
@@ -38,4 +39,5 @@ class ResetShiftRegisterTests(c: ResetShiftRegister) extends Tester(c) {
     }
     expect(c.io.out, (if (k < 4) 0 else ins(k % 4)))
   }
+  install(c)
 }
