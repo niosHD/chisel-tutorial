@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers.UnitTester
 
 class RealGCDInput extends Bundle {
   val a = Bits(width = 16)
@@ -37,7 +38,8 @@ class RealGCD extends Module {
   }
 }
 
-class RealGCDTests(c: RealGCD) extends Tester(c) {
+class RealGCDTests extends UnitTester {
+  val c = Module( new RealGCD )
   val inputs = List( (48, 32), (7, 3), (100, 10) )
   val outputs = List( 16, 1, 10)
 
@@ -61,4 +63,6 @@ class RealGCDTests(c: RealGCD) extends Tester(c) {
     i += 1;
   } while (t < 100 && i < 3)
   if (t >= 100) ok = false
+
+  install(c)
 }

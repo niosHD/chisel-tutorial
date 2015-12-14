@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers.UnitTester
 
 class Adder(val w: Int) extends Module {
   val io = new Bundle {
@@ -11,7 +12,8 @@ class Adder(val w: Int) extends Module {
   io.out := io.in0 + io.in1
 }
 
-class AdderTests(c: Adder) extends Tester(c) {
+class AdderTests extends UnitTester {
+  val c = Module( new Adder(8) )
   for (i <- 0 until 10) {
     val in0 = rnd.nextInt(1 << c.w)
     val in1 = rnd.nextInt(1 << c.w)
@@ -20,4 +22,5 @@ class AdderTests(c: Adder) extends Tester(c) {
     step(1)
     expect(c.io.out, (in0 + in1)&((1 << c.w)-1))
   }
+  install(c)
 }

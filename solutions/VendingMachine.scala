@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers.UnitTester
 
 class VendingMachine extends Module {
   val io = new Bundle {
@@ -32,24 +33,25 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests(c: VendingMachine) extends Tester(c) {  
+class VendingMachineTests extends UnitTester {
+  val c = Module( new VendingMachine )
   var money = 0
-  var isValid = false
+  var isValid = 0
   for (t <- 0 until 20) {
     val coin     = rnd.nextInt(3)*5
-    val isNickel = coin == 5
-    val isDime   = coin == 10
+    val isNickel = if(coin == 5) 1 else 0
+    val isDime   = if(coin == 10) 1 else 0
 
     // Advance circuit
-    poke(c.io.nickel, Bool(isNickel).litValue())
-    poke(c.io.dime,   Bool(isDime).litValue())
+    poke(c.io.nickel, isNickel)
+    poke(c.io.dime,   isDime)
     step(1)
 
     // Advance model
-    money = if (isValid) 0 else (money + coin)
-    isValid = money >= 20
+    money = if (isValid == 1) 0 else (money + coin)
+    isValid = if(money >= 20) 1 else 0
 
     // Compare
-    expect(c.io.valid, Bool(isValid).litValue())
+    expect(c.io.valid, isValid)
   }
 }

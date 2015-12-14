@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers.UnitTester
 import scala.math._
 
 class Mux2 extends Module {
@@ -13,7 +14,8 @@ class Mux2 extends Module {
   io.out := (io.sel & io.in1) | (~io.sel & io.in0)
 }
 
-class Mux2Tests(c: Mux2) extends Tester(c) {
+class Mux2Tests extends UnitTester {
+  val c = Module( new Mux2 )
   val n = pow(2, 3).toInt
   for (s <- 0 until 2) {
     for (i0 <- 0 until 2) {
@@ -26,4 +28,5 @@ class Mux2Tests(c: Mux2) extends Tester(c) {
       }
     }
   }
+  install(c)
 }
