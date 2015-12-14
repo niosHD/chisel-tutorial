@@ -1,17 +1,18 @@
 package TutorialSolutions
 
 import Chisel._
-import Chisel.testers.UnitTestRunners
+import Chisel.testers.{UnitTester, UnitTestRunners}
 
 object TutorialSolutions extends UnitTestRunners {
   val list_of_tests = Array(
-    "Accumulator"            -> (() => { new AccumulatorTests }),
+  // TODO: uncomment this first Accumulator, the one at the bottom just helps with commas during work here
+//    "Accumulator"            -> (() => { new AccumulatorTests }),
     "LFSR16"                 -> (() => { new LFSR16Tests }),
-    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests })
-//    "VecShiftRegister"       -> (() => { new VecShiftRegisterTests }),
+    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests }),
+//    "VecShiftRegister"       -> (() => { new VecShiftRegisterTests })
 //    "VecShiftRegisterSimple" -> (() => { new VecShiftRegisterSimpleTests }),
 //    "VecShiftRegisterParam"  -> (() => { new VecShiftRegisterParamTests }),
-//    "Max2"                   -> (() => { new Max2Tests }),
+    "Max2"                   -> (() => { new Max2Tests }),
 //    "MaxN"                   -> (() => { new MaxNTests }),
 //    "Adder"                  -> (() => { new AdderTests }),
 //    "DynamicMemorySearch"    -> (() => { new DynamicMemorySearchTests }),
@@ -22,7 +23,8 @@ object TutorialSolutions extends UnitTestRunners {
 //    "Mul"                    -> (() => { new MulTests }),
 //    "Counter"                -> (() => { new CounterTest }),
 //    "VendingMachine"         -> (() => { new VendingMachineTests }),
-//    "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests )}
+//    "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests )},
+    "Accumulator"            -> (() => { new AccumulatorTests })
   ).toMap
 
   def main(args: Array[String]): Unit = {
@@ -35,4 +37,3 @@ object TutorialSolutions extends UnitTestRunners {
     }
   }
 }
-
