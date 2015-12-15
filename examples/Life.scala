@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.testers._
 import util.Random
 
 class Cell(isBorn: Boolean) extends Module {

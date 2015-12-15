@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.testers._
 import scala.collection.mutable.ArrayBuffer
 
 object Delays {

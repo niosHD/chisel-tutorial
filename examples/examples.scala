@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.testers._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.immutable.HashMap
 
@@ -79,11 +80,10 @@ object TutorialExamples {
 
   def main(args: Array[String]): Unit = {
     val tutArgs = args.slice(1, args.length)
-    var testNames = Array[String]()
-    if (args.length == 0 || args(0) == "all") {
-      testNames = allTests
+    val testNames = if (args.length == 0 || args(0) == "all") {
+      allTests
     } else {
-      testNames :+= args(0)
+      Array(args(0))
     }
     runTests(testNames, tutArgs)
   }
