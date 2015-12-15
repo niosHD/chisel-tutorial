@@ -14,7 +14,8 @@ class ShiftRegister extends Module {
   io.out := r3
 }
 
-class ShiftRegisterTests(c: ShiftRegister) extends Tester(c) {  
+class ShiftRegisterUnitTester extends UnitTester {
+  val c = Module(new ShiftRegister)
   val reg     = Array.fill(4){ 0 }
   for (t <- 0 until 64) {
     val in = rnd.nextInt(2)
@@ -25,4 +26,5 @@ class ShiftRegisterTests(c: ShiftRegister) extends Tester(c) {
     reg(0) = in
     if (t >= 4) expect(c.io.out, reg(3))
   }
+  install(c)
 }

@@ -16,10 +16,12 @@ class VecSearch extends Module {
   io.out := elts(index)
 }
 
-class VecSearchTests(c: VecSearch) extends Tester(c) {
+class VecSearchUnitTester extends UnitTester {
+  val c = Module(new VecSearch)
   val list = VecSearchTest.pattern
   for (elt <- list) {
     expect(c.io.out, elt)
     step(1)
   }
+  install(c)
 }

@@ -23,9 +23,10 @@ class MemorySearch extends Module {
   io.address := index
 }
 
-class MemorySearchTests(c: MemorySearch) extends Tester(c) {
-  val list = c.elts.map(int(_))
-  val n = 8
+class MemorySearchUnitTester extends UnitTester {
+  val c = Module(new MemorySearch)
+  val list = c.elts.map(int(_)) 
+  val n = 20
   val maxT = n * (list.length + 3)
   for (k <- 0 until n) {
     val target = rnd.nextInt(16)
@@ -33,11 +34,20 @@ class MemorySearchTests(c: MemorySearch) extends Tester(c) {
     poke(c.io.target, target)
     step(1)
     poke(c.io.en,     0)
-    do {
-      step(1)
-    } while (peek(c.io.done) == 0 && t < maxT)
-    val addr = peek(c.io.address).toInt
-    expect(addr == list.length || list(addr) == target,
-           "LOOKING FOR " + target + " FOUND " + addr)
+//    when(c.io.done) {
+//      printf("Looking for 0x%x, found 0x%x\n", UInt(target), c.io.address)
+//      when(c.io.address < UInt(list.length)) {
+//        expect(c.elts(c.io.address), target)
+//      }
+//    }
+    val expectedIndex = if (list.contains(target)) {
+      list.indexOf(target)
+    } else {
+      list.length
+    }
+    step(expectedIndex)
+    expect(c.io.address, expectedIndex)
+    step(1)
   }
+  install(c)
 }

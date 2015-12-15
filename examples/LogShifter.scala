@@ -33,6 +33,8 @@ class LogShifter extends Module {
   }
 }
 
-class LogShifterTests(c: LogShifter) extends Tester(c) {
+class LogShifterUnitTester extends UnitTester {
+  val c = Module(new LogShifter)
+  install(c)
 }
 

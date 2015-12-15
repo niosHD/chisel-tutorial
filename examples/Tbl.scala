@@ -11,12 +11,14 @@ class Tbl extends Module {
   io.out := r(io.addr)
 }
 
-class TblTests(c: Tbl) extends Tester(c) {
+class TblUnitTester extends UnitTester {
+  val c = Module(new Tbl)
   for (t <- 0 until 16) {
     val addr = rnd.nextInt(256)
     poke(c.io.addr, addr)
-    step(1)
     expect(c.io.out, addr)
+    step(1)
   }
+  install(c)
 }
 

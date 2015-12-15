@@ -50,11 +50,12 @@ class Risc extends Module {
   }
 }
 
-class RiscTests(c: Risc) extends Tester(c) {  
+class RiscUnitTester extends UnitTester {
+  val c = Module(new Risc)
   def wr(addr: UInt, data: UInt)  = {
     poke(c.io.isWr,   1)
-    poke(c.io.wrAddr, addr.litValue())
-    poke(c.io.wrData, data.litValue())
+    poke(c.io.wrAddr, addr.litValue().toInt)
+    poke(c.io.wrData, data.litValue().toInt)
     step(1)
   }
   def boot()  = {
@@ -79,8 +80,15 @@ class RiscTests(c: Risc) extends Tester(c) {
   boot()
   var k = 0
   do {
-    tick(); k += 1
-  } while (peek(c.io.valid) == 0 && k < 10)
-  expect(k < 10, "TIME LIMIT")
+    when(c.io.valid) {
+      printf("io.valid, io.out %d\n", c.io.out)
+      setDone := Bool(true)
+//      stop(0)
+    } otherwise {
+      tick(); k += 1
+    }
+  } while (/*peek(c.io.valid) === Bool(false) &&*/ k < 10)
+//  expect(k < 10, "TIME LIMIT")
   expect(c.io.out, 4)
+  install(c)
 }

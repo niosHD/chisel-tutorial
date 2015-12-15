@@ -20,12 +20,14 @@ class ByteSelector extends Module {
   }
 }
 
-class ByteSelectorTests(c: ByteSelector) extends Tester(c) {
+class ByteSelectorUnitTester extends UnitTester {
+  val c = Module(new ByteSelector)
   val test_in = 12345678
   for (t <- 0 until 4) {
     poke(c.io.in,     test_in)
     poke(c.io.offset, t)
-    step(1)
     expect(c.io.out, (test_in >> (t * 8)) & 0xFF)
+    step(1)
   }
+  install(c)
 }
