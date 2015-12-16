@@ -3,6 +3,10 @@ package TutorialExamples
 import Chisel._
 import Chisel.testers._
 
+object MemorySearchTestData {
+  val element_list = Array(0, 4, 15,14, 2, 5, 13)
+
+}
 class MemorySearch extends Module {
   val io = new Bundle {
     val target  = UInt(INPUT,  4)
@@ -11,8 +15,9 @@ class MemorySearch extends Module {
     val address = UInt(OUTPUT, 3)
   }
   val index = Reg(init = UInt(0, width = 3))
-  val elts  = Vec(UInt(0), UInt(4), UInt(15), UInt(14),
-                  UInt(2), UInt(5), UInt(13))
+//  val elts  = Vec(UInt(0), UInt(4), UInt(15), UInt(14),
+//                  UInt(2), UInt(5), UInt(13))
+  val elts  = Vec(MemorySearchTestData.element_list.map(UInt(_)))
   val elt   = elts(index)
   val over  = !io.en && ((elt === io.target) || (index === UInt(7)))
   when (io.en) {
@@ -26,7 +31,7 @@ class MemorySearch extends Module {
 
 class MemorySearchUnitTester extends UnitTester {
   val c = Module(new MemorySearch)
-  val list = c.elts.map(int(_)) 
+  val list = MemorySearchTestData.element_list
   val n = 20
   val maxT = n * (list.length + 3)
   for (k <- 0 until n) {

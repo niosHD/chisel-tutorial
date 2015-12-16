@@ -4,30 +4,30 @@ import Chisel.testers.UnitTestRunners
 
 object TutorialExamples extends UnitTestRunners{
   val list_of_tests = Array(
-    "GCD" -> (() => { new GCDUnitTester }),
-    "Combinational" -> (() => { new CombinationalUnitTester }),
-    "Functionality" -> (() => { new FunctionalityUnitTester }),
-    "Parity" -> (() => { new ParityUnitTester }),
-    "Tbl" -> (() => { new TblUnitTester }),
-    "Life" -> (() => { new LifeUnitTester }),
-    "Risc" -> (() => { new RiscUnitTester }),
-    "Router" -> (() => { new RouterUnitTester }),
-    //      "Darken" -> (() => no Darken")
-    "Adder" -> (() => { new AdderUnitTester(8) }),
-    "Adder4" -> (() => { new Adder4UnitTester }),
-    "SimpleALU" -> (() => { new SimpleALUUnitTester }),
-    "FullAdder" -> (() => { new FullAdderUnitTester }),
-    "FullAdder2" -> (() => { new FullAdder2UnitTester }),
-    "ByteSelector" -> (() => { new ByteSelectorUnitTester }),
-    "HiLoMultiplier" -> (() => { new HiLoMultiplierUnitTester }),
-    "ShiftRegister" -> (() => { new ShiftRegisterUnitTester }),
-    "ResetShiftRegister" -> (() => { new ResetShiftRegisterUnitTester }),
+    "Adder"               -> (() => { new AdderUnitTester(8) }),
+    "Adder4"              -> (() => { new Adder4UnitTester }),
+    "ByteSelector"        -> (() => { new ByteSelectorUnitTester }),
+    "Combinational"       -> (() => { new CombinationalUnitTester }),
     "EnableShiftRegister" -> (() => { new EnableShiftRegisterUnitTester }),
-    "LogShifter" -> (() => { new LogShifterUnitTester }),
-    "VecSearch" -> (() => { new VecSearchUnitTester }),
-    "MemorySearch" -> (() => { new MemorySearchUnitTester }),
-    "Stack" -> (() => { new StackUnitTester(8) }),
-    "FIR" -> (() => { new FIRUnitTester })
+    "FullAdder"           -> (() => { new FullAdderUnitTester }),
+    "FullAdder2"          -> (() => { new FullAdder2UnitTester }),
+    "Functionality"       -> (() => { new FunctionalityUnitTester }),
+    "GCD"                 -> (() => { new GCDUnitTester }),
+    "HiLoMultiplier"      -> (() => { new HiLoMultiplierUnitTester }),
+    "Life"                -> (() => { new LifeUnitTester }),
+    "LogShifter"          -> (() => { new LogShifterUnitTester }),
+    "MemorySearch"        -> (() => { new MemorySearchUnitTester }),
+    "Parity"              -> (() => { new ParityUnitTester }),
+    "ResetShiftRegister"  -> (() => { new ResetShiftRegisterUnitTester }),
+    "Risc"                -> (() => { new RiscUnitTester }),
+    "Router"              -> (() => { new RouterUnitTester }),
+    "ShiftRegister"       -> (() => { new ShiftRegisterUnitTester }),
+    "SimpleALU"           -> (() => { new SimpleALUUnitTester }),
+    "Stack"               -> (() => { new StackUnitTester(8) }),
+    "Tbl"                 -> (() => { new TblUnitTester }),
+    "VecSearch"           -> (() => { new VecSearchUnitTester })
+    //    "FIR"                 -> (() => { new FIRUnitTester }),
+    //    "Darken"              -> (() => no Darken")
     ).toMap
 
   def main(args: Array[String]): Unit = {

@@ -1,63 +1,43 @@
 package TutorialProblems
 
-import Chisel._
-import Chisel.testers._
+import Chisel.testers.UnitTestRunners
 
-object problems {
-  val allTests = Array(
-    "Accumulator",
-    "LFSR16",
-    "SingleEvenFilter",
-    "VecShiftRegister",
-    "VecShiftRegisterSimple",
-    "VecShiftRegisterParam",
-    "Max2",
-    "MaxN",
-    "Adder",
-    "DynamicMemorySearch",
-    "RealGCD" ,
-    "Mux2" ,
-    "Mux4",
-    "Memo" ,
-    "Mul" ,
-    "Counter",
-    "VendingMachine"
-  )
 
-  def runTests(tutTests: Array[String], tutArgs: Array[String]) {
-    implicit val args = tutArgs
-    val tester = new UnitTester
-    for (test <- tutTests) {
-      test match {
-        case "Accumulator" => tester.execute { new AccumulatorTests }
-        case "LFSR16" => tester.execute { new LFSR16Tests }
-        case "SingleEvenFilter" => tester.execute { new SingleEvenFilterTests(16) }
-        case "VecShiftRegister" => tester.execute { new VecShiftRegisterTests }
-        case "VecShiftRegisterSimple" => tester.execute { new VecShiftRegisterSimpleTests }
-        case "VecShiftRegisterParam" => tester.execute { new VecShiftRegisterParamTests(8, 4) }
-        case "Max2" => tester.execute { new Max2Tests }
-        case "MaxN" => tester.execute { new MaxNTests(8, 16) }
-        case "Adder" => tester.execute { new AdderTests(8) }
-        case "DynamicMemorySearch" => tester.execute { new DynamicMemorySearchTests(8, 4) }
-        case "RealGCD" =>  tester.execute { new RealGCDTests }
-        case "Mux2" =>  tester.execute { new Mux2Tests }
-        case "Mux4" => tester.execute { new Mux4Tests }
-        case "Memo" =>  tester.execute { new MemoTests }
-        case "Mul" =>  tester.execute { new MulTests }
-        case "Counter" => tester.execute { new CounterTest }
-        case "VendingMachine" => tester.execute { new VendingMachineTests }
+object TutorialProblems extends UnitTestRunners {
+  val list_of_tests = Array(
+    "Accumulator"            -> (() => { new AccumulatorTests }),
+    "LFSR16"                 -> (() => { new LFSR16Tests }),
+    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests(16) }),
+    "VecShiftRegister"       -> (() => { new VecShiftRegisterTests }),
+    "VecShiftRegisterSimple" -> (() => { new VecShiftRegisterSimpleTests }),
+    "VecShiftRegisterParam"  -> (() => { new VecShiftRegisterParamTests(8, 4) }),
+    "Max2"                   -> (() => { new Max2Tests }),
+    "MaxN"                   -> (() => { new MaxNTests(8, 16) }),
+    "Adder"                  -> (() => { new AdderTests(8) }),
+    "DynamicMemorySearch"    -> (() => { new DynamicMemorySearchTests(8, 4) }),
+    "RealGCD"                -> (() => { new RealGCDTests }),
+    "Mux2"                   -> (() => { new Mux2Tests }),
+    "Mux4"                   -> (() => { new Mux4Tests }),
+    "Memo"                   -> (() => { new MemoTests }),
+    "Mul"                    -> (() => { new MulTests }),
+    "Counter"                -> (() => { new CounterTest }),
+    "VendingMachine"         -> (() => { new VendingMachineTests }),
+    "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests })
+  ).toMap
+
+  def main(args: Array[String]): Unit = {
+    val to_call = if( args.length > 0) args else list_of_tests.keys.toArray
+
+    for( arg <- to_call ) {
+      if (list_of_tests.contains(arg)) {
+        execute( list_of_tests(arg)() )
+      }
+      else {
+        println(s"Error: $arg not found in list of tests")
+        println("option\n"+ list_of_tests.keys.toList.sorted.mkString(", "))
       }
     }
   }
-
-  def main(args: Array[String]): Unit = {
-    val tutArgs = args.slice(1, args.length)
-    val testNames = if (args.length == 0 || args(0) == "all") {
-      allTests
-    } else {
-      Array(args(0))
-    }
-    runTests(testNames, tutArgs)
-  }
 }
+
 

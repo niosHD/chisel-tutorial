@@ -72,10 +72,10 @@ class RouterUnitTester extends UnitTester {
     poke(c.io.in.valid,       1)
     poke(c.io.in.bits.header, header)
     poke(c.io.in.bits.body,   body)
+
     for (out <- c.io.outs) {
       when(out.valid) {
         printf("io.valid, io.pc %d\n", io.pc)
-        setDone := Bool(true)
 //      stop(0)
       } otherwise {
         step(1)

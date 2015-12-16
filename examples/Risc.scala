@@ -79,17 +79,25 @@ class RiscUnitTester extends UnitTester {
   for (addr <- 0 until app.length) 
     wr(UInt(addr), app(addr))
   boot()
-  var k = 0
-  do {
-    when(c.io.valid) {
-      printf("io.valid, io.out %d\n", c.io.out)
-      setDone := Bool(true)
-//      stop(0)
-    } otherwise {
-      tick(); k += 1
-    }
-  } while (/*peek(c.io.valid) === Bool(false) &&*/ k < 10)
-//  expect(k < 10, "TIME LIMIT")
+
+  for(instruction <- app) {
+    tick()
+  }
+  expect(c.io.valid, 1)
   expect(c.io.out, 4)
+
+//  var k = 0
+//  do {
+//    when(c.io.valid) {
+//      printf("io.valid, io.out %d\n", c.io.out)
+//      setDone := Bool(true)
+////      stop(0)
+//    } otherwise {
+//      tick(); k += 1
+//    }
+//  } while (/*peek(c.io.valid) === Bool(false) &&*/ k < 10)
+////  expect(k < 10, "TIME LIMIT")
+//  expect(c.io.out, 4)
+
   install(c)
 }
