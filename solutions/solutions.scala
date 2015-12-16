@@ -1,14 +1,13 @@
 package TutorialSolutions
 
 import Chisel._
-import Chisel.testers.{UnitTester, UnitTestRunners}
+import Chisel.testers.UnitTestRunners
 
 object TutorialSolutions extends UnitTestRunners {
   val list_of_tests = Array(
-  // TODO: uncomment this first Accumulator, the one at the bottom just helps with commas during work here
     "Accumulator"            -> (() => { new AccumulatorTests }),
     "LFSR16"                 -> (() => { new LFSR16Tests }),
-    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests(16)) }),
+    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests(16) }),
     "VecShiftRegister"       -> (() => { new VecShiftRegisterTests }),
     "VecShiftRegisterSimple" -> (() => { new VecShiftRegisterSimpleTests }),
     "VecShiftRegisterParam"  -> (() => { new VecShiftRegisterParamTests(8, 4) }),
@@ -23,15 +22,19 @@ object TutorialSolutions extends UnitTestRunners {
     "Mul"                    -> (() => { new MulTests }),
     "Counter"                -> (() => { new CounterTest }),
     "VendingMachine"         -> (() => { new VendingMachineTests }),
-    "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests )},
+    "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests })
   ).toMap
 
   def main(args: Array[String]): Unit = {
     val to_call = if( args.length > 0) args else list_of_tests.keys.toArray
 
-    for( arg <- args ) {
+    for( arg <- to_call ) {
       if (list_of_tests.contains(arg)) {
         execute( list_of_tests(arg)() )
+      }
+      else {
+        println(s"Error: $arg not found in list of tests")
+        println("option\n"+ list_of_tests.keys.toList.sorted.mkString(", "))
       }
     }
   }
