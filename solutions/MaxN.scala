@@ -14,19 +14,18 @@ class MaxN(val n: Int, val w: Int) extends Module {
   io.out := io.ins.reduceLeft(Max2)
 }
 
-class MaxNTests extends UnitTester {
-  val c = Module( new MaxN(8, 16) )
-
+class MaxNTests(val n: Int, val w: Int) extends UnitTester {
+  val c = Module(new MaxN(n, w))
   val ins = Array.fill(c.n){ 0 }
   for (i <- 0 until 10) {
     var mx = 0
     for (i <- 0 until c.n) {
       ins(i) = rnd.nextInt(1 << c.w)
       poke(c.io.ins(i), ins(i))
-      mx = if (ins(i) > mx) ins(i) else mx
+      mx = if (ins(i) > mx) ins(i) else mx;
     }
-    step(1)
     expect(c.io.out, mx)
+    step(1)
   }
   install(c)
 }

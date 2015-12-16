@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.testers._
 
 class MemorySearch extends Module {
   val io = new Bundle {
@@ -46,6 +47,7 @@ class MemorySearchUnitTester extends UnitTester {
       list.length
     }
     step(expectedIndex)
+    expect(c.io.done, 1)
     expect(c.io.address, expectedIndex)
     step(1)
   }

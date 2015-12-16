@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.testers._
 
 class ShiftRegister extends Module {
   val io = new Bundle {

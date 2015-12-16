@@ -13,8 +13,7 @@ class Max2 extends Module {
 }
 
 class Max2Tests extends UnitTester {
-  val c = Module( new Max2 )
-
+  val c = Module(new Max2)
   for (i <- 0 until 10) {
     // FILL THIS IN HERE
     val in0 = rnd.nextInt(256)
@@ -22,9 +21,8 @@ class Max2Tests extends UnitTester {
     poke(c.io.in0, in0)
     poke(c.io.in1, in1)
     // FILL THIS IN HERE
-    step(1)
     expect(c.io.out, if (in0 > in1) in0 else in1)
+    step(1)
   }
-
   install(c)
 }

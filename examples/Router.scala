@@ -1,6 +1,7 @@
 package TutorialExamples
 
 import Chisel._
+import Chisel.testers._
 
 class ReadCmd extends Bundle {
   val addr = UInt(width = 32);

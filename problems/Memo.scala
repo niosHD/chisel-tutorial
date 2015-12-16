@@ -1,6 +1,7 @@
 package TutorialProblems
 
 import Chisel._
+import Chisel.testers._
 
 class Memo extends Module {
   val io = new Bundle {
@@ -11,7 +12,7 @@ class Memo extends Module {
     val rdAddr  = UInt(INPUT,  8)
     val rdData  = UInt(OUTPUT, 8)
   }
-  val mem = Mem(UInt(width = 8), 256)
+  val mem = Mem(256, UInt(width = 8))
 
   // --------------------------------------------------- \\
   // When wen is asserted, write wrData to mem at wrAddr 
@@ -24,7 +25,8 @@ class Memo extends Module {
 
 }
 
-class MemoTests(c: Memo) extends Tester(c) {
+class MemoTests extends UnitTester {
+  val c = Module(new Memo)
   def rd(addr: Int, data: Int) = {
     poke(c.io.ren, 1)
     poke(c.io.rdAddr, addr)
@@ -41,4 +43,5 @@ class MemoTests(c: Memo) extends Tester(c) {
   rd(0, 1)
   wr(9, 11)
   rd(9, 11)
+  install(c)
 }

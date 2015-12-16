@@ -5,9 +5,9 @@ import Chisel.testers.UnitTester
 
 class VendingMachine extends Module {
   val io = new Bundle {
-    val nickel = Bool(dir = INPUT)
-    val dime   = Bool(dir = INPUT)
-    val valid  = Bool(dir = OUTPUT) }
+    val nickel = Bool(INPUT)
+    val dime   = Bool(INPUT)
+    val valid  = Bool(OUTPUT) }
   val sIdle :: s5 :: s10 :: s15 :: sOk :: Nil =
     Enum(UInt(), 5)
   val state = Reg(init = sIdle)
@@ -33,8 +33,8 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests extends UnitTester {
-  val c = Module( new VendingMachine )
+class VendingMachineTests extends UnitTester {  
+  val c = Module(new VendingMachine)
   var money = 0
   var isValid = 0
   for (t <- 0 until 20) {
@@ -54,4 +54,5 @@ class VendingMachineTests extends UnitTester {
     // Compare
     expect(c.io.valid, isValid)
   }
+  install(c)
 }

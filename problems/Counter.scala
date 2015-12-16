@@ -1,6 +1,7 @@
 package TutorialProblems
 
 import Chisel._
+import Chisel.testers._
 import Counter._
 
 object Counter {
@@ -34,7 +35,8 @@ class Counter extends Module {
 
 }
 
-class CounterTest(c: Counter) extends Tester(c) {
+class CounterTest extends UnitTester {
+  val c = Module(new Counter)
   val maxInt  = 16
   var curCnt  = 0
 
@@ -55,5 +57,6 @@ class CounterTest(c: Counter) extends Tester(c) {
     curCnt = if(inc) intWrapAround(curCnt + amt, 255) else curCnt
     expect(c.io.tot, curCnt)
   }
+  install(c)
 }
 

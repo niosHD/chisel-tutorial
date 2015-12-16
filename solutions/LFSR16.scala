@@ -17,7 +17,7 @@ class LFSR16 extends Module {
 }
 
 class LFSR16Tests extends UnitTester {
-  val c = Module( new LFSR16 )
+  val c = Module(new LFSR16)
   var res = 1
   for (t <- 0 until 16) {
     val inc = rnd.nextInt(2)
@@ -28,6 +28,6 @@ class LFSR16Tests extends UnitTester {
       res = (res >> 1) | (bit << 15);
     }
     expect(c.io.out, res)
-    install(c)
   }
+  install(c)
 }

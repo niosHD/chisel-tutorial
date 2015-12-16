@@ -1,6 +1,7 @@
 package Hello
 
 import Chisel._
+import Chisel.testers._
 
 class Hello extends Module {
   val io = new Bundle { 
@@ -9,15 +10,17 @@ class Hello extends Module {
   io.out := UInt(42)
 }
 
-class HelloTests(c: Hello) extends Tester(c) {
+class HelloTests extends UnitTester {
+  val c = Module(new Hello)
   step(1)
   expect(c.io.out, 42)
+  install(c)
 }
 
 object Hello {
-  def main(args: Array[String]): Unit = {
-    val tutArgs = args.slice(1, args.length)
-    chiselMainTest(tutArgs, () => Module(new Hello())) {
-      c => new HelloTests(c) }
+  def main(mainArgs: Array[String]): Unit = {
+    implicit val args = mainArgs.slice(1, mainArgs.length)
+    val tester = new UnitTester
+    tester.execute { new HelloTests }
   }
 }

@@ -39,30 +39,38 @@ class RealGCD extends Module {
 }
 
 class RealGCDTests extends UnitTester {
-  val c = Module( new RealGCD )
+  def compute_gcd(a: Int, b: Int): Tuple2[Int, Int] = {
+    var x = a
+    var y = b
+    var depth = 0
+    do {
+      if (x > y) {
+        val t = x; x = y; y = t
+      }
+      else {
+        y -= x
+      }
+      depth += 1
+    } while(y > 0 )
+    return (x, depth)
+  }
+
+  val c = Module(new RealGCD)
   val inputs = List( (48, 32), (7, 3), (100, 10) )
-  val outputs = List( 16, 1, 10)
 
-  var i = 0
-  do {
-    var transfer = false
-    do {
-      poke(c.io.in.bits.a, inputs(i)._1)
-      poke(c.io.in.bits.b, inputs(i)._2)
+  for ( (a, b) <- inputs) {
+      poke(c.io.in.bits.a, a)
+      poke(c.io.in.bits.b, b)
       poke(c.io.in.valid,  1)
-      transfer = (peek(c.io.in.ready) == 1)
       step(1)
-    } while (t < 100 && !transfer)
+      poke(c.io.in.valid,  0)
 
-    do {
-      poke(c.io.in.valid, 0)
+      val (expected_gcd, steps) = compute_gcd(a, b)
+      step(steps) // -1 is because we step(1) already to toggle the enable
+      expect(c.io.out.bits, expected_gcd)
+      expect(c.io.out.valid, 1 )
       step(1)
-    } while (t < 100 && (peek(c.io.out.valid) == 0))
 
-    expect(c.io.out.bits, outputs(i))
-    i += 1;
-  } while (t < 100 && i < 3)
-  if (t >= 100) ok = false
-
+  }
   install(c)
 }

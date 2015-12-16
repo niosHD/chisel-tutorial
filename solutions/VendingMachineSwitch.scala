@@ -37,7 +37,7 @@ class VendingMachineSwitch extends Module {
 }
 
 class VendingMachineSwitchTests extends UnitTester {
-  val c = Module( new VendingMachineSwitch )
+  val c = Module(new VendingMachineSwitch)
   var money = 0
   var isValid = 0
   for (t <- 0 until 20) {

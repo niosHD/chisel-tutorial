@@ -14,7 +14,7 @@ class Accumulator extends Module {
 }
 
 class AccumulatorTests extends UnitTester {
-  val c = Module( new Accumulator )
+  val c = Module(new Accumulator)
   var tot = 0
   for (t <- 0 until 16) {
     val in = rnd.nextInt(2)

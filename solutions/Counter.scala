@@ -36,7 +36,7 @@ class Counter extends Module {
 }
 
 class CounterTest extends UnitTester {
-  val c = Module( new Counter )
+  val c = Module(new Counter)
   val maxInt  = 16
   var curCnt  = 0
 

@@ -6,16 +6,16 @@ import Chisel.testers.{UnitTester, UnitTestRunners}
 object TutorialSolutions extends UnitTestRunners {
   val list_of_tests = Array(
   // TODO: uncomment this first Accumulator, the one at the bottom just helps with commas during work here
-//    "Accumulator"            -> (() => { new AccumulatorTests }),
+    "Accumulator"            -> (() => { new AccumulatorTests }),
     "LFSR16"                 -> (() => { new LFSR16Tests }),
-    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests }),
-//    "VecShiftRegister"       -> (() => { new VecShiftRegisterTests })
-//    "VecShiftRegisterSimple" -> (() => { new VecShiftRegisterSimpleTests }),
-//    "VecShiftRegisterParam"  -> (() => { new VecShiftRegisterParamTests }),
+    "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests(16)) }),
+    "VecShiftRegister"       -> (() => { new VecShiftRegisterTests }),
+    "VecShiftRegisterSimple" -> (() => { new VecShiftRegisterSimpleTests }),
+    "VecShiftRegisterParam"  -> (() => { new VecShiftRegisterParamTests(8, 4) }),
     "Max2"                   -> (() => { new Max2Tests }),
-//    "MaxN"                   -> (() => { new MaxNTests }),
-    "Adder"                  -> (() => { new AdderTests }),
-//    "DynamicMemorySearch"    -> (() => { new DynamicMemorySearchTests }),
+    "MaxN"                   -> (() => { new MaxNTests(8, 16) }),
+    "Adder"                  -> (() => { new AdderTests(8) }),
+    "DynamicMemorySearch"    -> (() => { new DynamicMemorySearchTests(8, 4) }),
     "RealGCD"                -> (() => { new RealGCDTests }),
     "Mux2"                   -> (() => { new Mux2Tests }),
     "Mux4"                   -> (() => { new Mux4Tests }),
@@ -24,7 +24,6 @@ object TutorialSolutions extends UnitTestRunners {
     "Counter"                -> (() => { new CounterTest }),
     "VendingMachine"         -> (() => { new VendingMachineTests }),
     "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests )},
-    "Accumulator"            -> (() => { new AccumulatorTests })
   ).toMap
 
   def main(args: Array[String]): Unit = {
@@ -37,3 +36,4 @@ object TutorialSolutions extends UnitTestRunners {
     }
   }
 }
+

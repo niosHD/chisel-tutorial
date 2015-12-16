@@ -1,6 +1,7 @@
 package TutorialProblems
 
 import Chisel._
+import Chisel.testers._
 
 class Accumulator extends Module {
   val io = new Bundle {
@@ -12,7 +13,8 @@ class Accumulator extends Module {
   io.out := UInt(0)
 }
 
-class AccumulatorTests(c: Accumulator) extends Tester(c) {
+class AccumulatorTests extends UnitTester {
+  val c = Module(new Accumulator)
   var tot = 0
   for (t <- 0 until 16) {
     val in = rnd.nextInt(2)
@@ -21,4 +23,5 @@ class AccumulatorTests(c: Accumulator) extends Tester(c) {
     if (in == 1) tot += 1
     expect(c.io.out, tot)
   }
+  install(c)
 }
