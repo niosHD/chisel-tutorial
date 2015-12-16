@@ -1,13 +1,14 @@
 package TutorialProblems
 
 import Chisel._
+import Chisel.testers._
 
 class VendingMachine extends Module {
   val io = new Bundle {
     val nickel = Bool(INPUT)
     val dime   = Bool(INPUT)
     val valid  = Bool(OUTPUT) }
-  val sIdle :: s5 :: s10 :: s15 :: sOk :: Nil = 
+  val sIdle :: s5 :: s10 :: s15 :: sOk :: Nil =
     Enum(UInt(), 5)
   val state = Reg(init=sIdle)
 
@@ -16,7 +17,8 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests(c: VendingMachine) extends Tester(c) {  
+class VendingMachineTests extends UnitTester {  
+  val c = Module(new VendingMachine)
   var money = 0
   var isValid = false
   for (t <- 0 until 20) {
@@ -36,4 +38,5 @@ class VendingMachineTests(c: VendingMachine) extends Tester(c) {
     // Compare
     expect(c.io.valid, Bool(isValid).litValue())
   }
+  install(c)
 }

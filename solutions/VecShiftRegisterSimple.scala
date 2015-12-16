@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers._
 
 class VecShiftRegisterSimple extends Module {
   val io = new Bundle {
@@ -15,7 +16,8 @@ class VecShiftRegisterSimple extends Module {
   io.out    := delays(3)
 }
 
-class VecShiftRegisterSimpleTests(c: VecShiftRegisterSimple) extends Tester(c) { 
+class VecShiftRegisterSimpleTests extends UnitTester { 
+  val c = Module(new VecShiftRegisterSimple)
   val reg = Array.fill(4){ 0 }
   for (t <- 0 until 16) {
     val in = rnd.nextInt(256)
@@ -26,4 +28,5 @@ class VecShiftRegisterSimpleTests(c: VecShiftRegisterSimple) extends Tester(c) {
     reg(0) = in
     expect(c.io.out, reg(3))
   }
+  install(c)
 }

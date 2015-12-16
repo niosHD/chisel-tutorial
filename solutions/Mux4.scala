@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers._
 
 class Mux4 extends Module {
   val io = new Bundle {
@@ -38,7 +39,8 @@ class Mux4 extends Module {
   io.out := m2.io.out
 }
 
-class Mux4Tests(c: Mux4) extends Tester(c) {  
+class Mux4Tests extends UnitTester {  
+  val c = Module(new Mux4)
   for (s0 <- 0 until 2) {
     for (s1 <- 0 until 2) {
       for(i0 <- 0 until 2) {
@@ -50,17 +52,18 @@ class Mux4Tests(c: Mux4) extends Tester(c) {
               poke(c.io.in1, i1)
               poke(c.io.in2, i2)
               poke(c.io.in3, i3)
-              step(1)
               val out = if(s1 == 1) {
                           if (s0 == 1) i3 else i2
                         } else {
                           if (s0 == 1) i1 else i0 
                         }
               expect(c.io.out, out)
+              step(1)
             }
           }
         }
       } 
     }
   }
+  install(c)
 }

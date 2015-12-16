@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers._
 
 abstract class Filter[T <: Data](dtype: T) extends Module {
   val io = new Bundle {
@@ -31,15 +32,17 @@ class SingleEvenFilter[T <: UInt](dtype: T) extends Filter(dtype) {
   io.out        := even.io.out
 }
 
-class SingleEvenFilterTests[T <: UInt](c: SingleEvenFilter[T]) extends Tester(c) {
-  val maxInt  = 1 << 16
+class SingleEvenFilterTests(w: Int) extends UnitTester {
+  val c = Module(new SingleEvenFilter(UInt(width = w)))
+  val maxInt  = 1 << w
   for (i <- 0 until 10) {
     val in = rnd.nextInt(maxInt)
     poke(c.io.in.valid, 1)
     poke(c.io.in.bits, in)
-    val isSingleEven = (in <= 9) && (in%2 == 1)
-    step(1)
-    expect(c.io.out.valid, Bool(isSingleEven).litValue())
+    val isSingleEven = if ((in <= 9) && (in%2 == 1)) 1 else 0
+    expect(c.io.out.valid, isSingleEven)
     expect(c.io.out.bits, in)
+    step(1)
   }
+  install(c)
 }

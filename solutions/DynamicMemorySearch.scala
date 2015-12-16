@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._
+import Chisel.testers._
 
 class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   val io = new Bundle {
@@ -26,7 +27,8 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   io.target := index
 }
 
-class DynamicMemorySearchTests(c: DynamicMemorySearch) extends Tester(c) {
+class DynamicMemorySearchTests(val n: Int, val w: Int) extends UnitTester {
+  val c = Module(new DynamicMemorySearch(n, w))
   val list = Array.fill(c.n){ 0 }
   for (k <- 0 until 16) {
     // WRITE A WORD
@@ -44,14 +46,17 @@ class DynamicMemorySearchTests(c: DynamicMemorySearch) extends Tester(c) {
     poke(c.io.data, target)
     poke(c.io.en,   1)
     step(1)
-    do {
-      poke(c.io.en, 0)
-      step(1)
-    } while (peek(c.io.done) == 0)
-    val addr = peek(c.io.target).toInt
-    if (list contains target)
-      expect(list(addr) == target, "LOOKING FOR " + target + " FOUND " + addr)
-    else
-      expect(addr==(list.length-1), "LOOKING FOR " + target + " FOUND " + addr)
+    poke(c.io.en, 0)
+    step(1)
+    val expectedIndex = if (list.contains(target)) {
+      list.indexOf(target)
+    } else {
+      list.length - 1
+    }
+    step(expectedIndex)
+    expect(c.io.done, 1)
+    expect(c.io.target, expectedIndex)
+    step(1)
   }
+  install(c)
 }

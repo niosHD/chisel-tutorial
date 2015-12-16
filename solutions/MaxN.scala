@@ -1,6 +1,7 @@
 package TutorialSolutions
 
 import Chisel._ 
+import Chisel.testers._
 
 class MaxN(val n: Int, val w: Int) extends Module {
 
@@ -13,7 +14,8 @@ class MaxN(val n: Int, val w: Int) extends Module {
   io.out := io.ins.reduceLeft(Max2)
 }
 
-class MaxNTests(c: MaxN) extends Tester(c) {
+class MaxNTests(val n: Int, val w: Int) extends UnitTester {
+  val c = Module(new MaxN(n, w))
   val ins = Array.fill(c.n){ 0 }
   for (i <- 0 until 10) {
     var mx = 0
@@ -22,7 +24,8 @@ class MaxNTests(c: MaxN) extends Tester(c) {
       poke(c.io.ins(i), ins(i))
       mx = if (ins(i) > mx) ins(i) else mx;
     }
-    step(1)
     expect(c.io.out, mx)
+    step(1)
   }
+  install(c)
 }

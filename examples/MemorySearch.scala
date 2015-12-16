@@ -47,6 +47,7 @@ class MemorySearchUnitTester extends UnitTester {
       list.length
     }
     step(expectedIndex)
+    expect(c.io.done, 1)
     expect(c.io.address, expectedIndex)
     step(1)
   }
