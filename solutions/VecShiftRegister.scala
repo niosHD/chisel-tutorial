@@ -55,4 +55,5 @@ class VecShiftRegisterTests extends UnitTester {
     }
     expect(c.io.out, reg(3))
   }
+  install(c)
 }

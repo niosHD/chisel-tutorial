@@ -65,7 +65,6 @@ class StackUnitTester(val depth: Int) extends UnitTester {
     poke(c.io.dataIn, dataIn)
     step(1)
     expect(c.io.dataOut, dataOut)
-    step(1)
   }
   install(c)
 }
