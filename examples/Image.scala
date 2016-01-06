@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import scala.io.Source
@@ -21,7 +21,7 @@ object Image {
   }
   def apply(filename: String): Image = {
     val file = Source.fromFile(filename)(scala.io.Codec.ISO8859)
-    var buf = new StringBuilder();
+    var buf = new StringBuilder()
     file.foreach(c => buf += c)
     val rawData = buf.result()
     file.close()

@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._

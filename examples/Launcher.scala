@@ -1,8 +1,8 @@
-package TutorialExamples
+package examples
 
 import Chisel.testers.UnitTestRunners
 
-object TutorialExamples extends UnitTestRunners{
+object Launcher extends UnitTestRunners{
   val list_of_tests = Array(
     "Adder"               -> (() => { new AdderUnitTester(8) }),
     "Adder4"              -> (() => { new Adder4UnitTester }),

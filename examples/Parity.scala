@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -23,7 +23,7 @@ class ParityUnitTester extends UnitTester {
     val bit = rnd.nextInt(2)
     poke(c.io.in, bit)
     step(1)
-    isOdd = (isOdd + bit) % 2;
+    isOdd = (isOdd + bit) % 2
     expect(c.io.out, isOdd)
   }
   install(c)

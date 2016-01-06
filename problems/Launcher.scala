@@ -1,10 +1,12 @@
-package TutorialProblems
+package problems
 
 import Chisel.testers.UnitTestRunners
 
+import scala.collection.mutable.ArrayBuffer
 
-object TutorialProblems extends UnitTestRunners {
-  val list_of_tests = Array(
+
+object Launcher extends UnitTestRunners {
+  val list_of_tests = Map(
     "Accumulator"            -> (() => { new AccumulatorTests }),
     "LFSR16"                 -> (() => { new LFSR16Tests }),
     "SingleEvenFilter"       -> (() => { new SingleEvenFilterTests(16) }),
@@ -23,19 +25,25 @@ object TutorialProblems extends UnitTestRunners {
     "Counter"                -> (() => { new CounterTest }),
     "VendingMachine"         -> (() => { new VendingMachineTests }),
     "VendingMachineSwitch"   -> (() => { new VendingMachineSwitchTests })
-  ).toMap
+  )
 
   def main(args: Array[String]): Unit = {
     val to_call = if( args.length > 0) args else list_of_tests.keys.toArray
+    val failed_tests = new ArrayBuffer[String]()
 
     for( arg <- to_call ) {
       if (list_of_tests.contains(arg)) {
-        execute( list_of_tests(arg)() )
+        if(!execute( list_of_tests(arg)() )) {
+          failed_tests += arg
+        }
       }
       else {
         println(s"Error: $arg not found in list of tests")
         println("option\n"+ list_of_tests.keys.toList.sorted.mkString(", "))
       }
+    }
+    if(failed_tests.nonEmpty) {
+      println("Following tests failed in some way\n" + failed_tests.sorted.mkString("\n"))
     }
   }
 }

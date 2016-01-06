@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -38,7 +38,7 @@ class ResetShiftRegisterUnitTester extends UnitTester {
       ins(k % 4) = in
       k = k + 1
     }
-    expect(c.io.out, (if (k < 4) 0 else ins(k % 4)))
+    expect(c.io.out, if (k < 4) 0 else ins(k % 4))
   }
   install(c)
 }

@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -51,10 +51,10 @@ class StackUnitTester(val depth: Int) extends UnitTester {
       dataOut = nxtDataOut
       if (push == 1 && stack.length < c.depth) {
         stack.push(dataIn)
-      } else if (pop == 1 && stack.length > 0) {
+      } else if (pop == 1 && stack.nonEmpty) {
         stack.pop()
       }
-      if (stack.length > 0) {
+      if (stack.nonEmpty) {
         nxtDataOut = stack.top
       }
     }

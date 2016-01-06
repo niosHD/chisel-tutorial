@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -76,7 +76,7 @@ class RiscUnitTester extends UnitTester {
                    I(c.add_op,   1, 1, 1), // r1 <- r1 + r1
                    I(c.add_op, 255, 1, 0)) // rh <- r1
   wr(UInt(0), Bits(0)) // skip reset
-  for (addr <- 0 until app.length) 
+  for (addr <- app.indices)
     wr(UInt(addr), app(addr))
   boot()
 

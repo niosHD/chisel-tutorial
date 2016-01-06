@@ -1,10 +1,10 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
 
 class ReadCmd extends Bundle {
-  val addr = UInt(width = 32);
+  val addr = UInt(width = 32)
 }
 
 class WriteCmd extends ReadCmd {

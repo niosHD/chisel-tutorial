@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -21,7 +21,7 @@ class GCD extends Module {
 }
 
 class GCDUnitTester extends UnitTester {
-  def compute_gcd(a: Int, b: Int): Tuple2[Int, Int] = {
+  def compute_gcd(a: Int, b: Int): (Int, Int) = {
     var x = a
     var y = b
     var depth = 1
@@ -34,7 +34,7 @@ class GCDUnitTester extends UnitTester {
       }
       depth += 1
     }
-    return (x, depth)
+    (x, depth)
   }
 
   val (a, b, z) = (64, 48, 16)

@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -35,7 +35,7 @@ class Adder4 extends Module {
   Adder3.io.a := io.A(3)
   Adder3.io.b := io.B(3)
   Adder3.io.cin := Adder2.io.cout
-  io.Sum := Cat(Adder3.io.sum, s2).toUInt()
+  io.Sum := Cat(Adder3.io.sum, s2)
   io.Cout := Adder3.io.cout
 }
 
@@ -50,7 +50,7 @@ class Adder4UnitTester extends UnitTester {
     poke(c.io.B,   rnd1)
     poke(c.io.Cin, rnd2)
     val rsum = (rnd0 & 0xF) + (rnd1 & 0xF) + (rnd2 & 0x1)
-    expect(c.io.Sum, (rsum & 0xF))
+    expect(c.io.Sum, rsum & 0xF)
     expect(c.io.Cout, rsum >> 4)
     step(1)
   }

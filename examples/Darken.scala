@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 
@@ -15,7 +15,7 @@ class DarkenTests(c: Darken, val infilename: String, val outfilename: String) ex
   val inPic  = Image(infilename)
   val outPic = Image(inPic.w, inPic.h, inPic.d)
   step(1)
-  for (i <- 0 until inPic.data.length) {
+  for (i <- inPic.data.indices) {
     val rin = inPic.data(i)
     val  in = if (rin < 0) 256 + rin else rin
     poke(c.io.in, in)

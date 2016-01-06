@@ -1,4 +1,4 @@
-package TutorialExamples
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -64,9 +64,9 @@ class SimpleALUUnitTester extends UnitTester {
       // for (opcode <- 0 until 4) {
         var output = 0
         if (opcode == 0) {
-          output = ((a+b) & 0xF)
+          output = (a + b) & 0xF
         } else if (opcode == 1) {
-          output = ((a-b) & 0xF)
+          output = (a - b) & 0xF
         } else if (opcode == 2) {
           output = a
         } else {
