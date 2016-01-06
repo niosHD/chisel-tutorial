@@ -2,8 +2,10 @@ package examples
 
 import Chisel.testers.UnitTestRunners
 
+import scala.collection.mutable.ArrayBuffer
+
 object Launcher extends UnitTestRunners{
-  val list_of_tests = Array(
+  val list_of_tests = Map(
     "Adder"               -> (() => { new AdderUnitTester(8) }),
     "Adder4"              -> (() => { new Adder4UnitTester }),
     "ByteSelector"        -> (() => { new ByteSelectorUnitTester }),
@@ -28,19 +30,41 @@ object Launcher extends UnitTestRunners{
     "VecSearch"           -> (() => { new VecSearchUnitTester })
     //    "FIR"                 -> (() => { new FIRUnitTester }),
     //    "Darken"              -> (() => no Darken")
-    ).toMap
+    )
 
   def main(args: Array[String]): Unit = {
-    val to_call = if( args.length > 0) args else list_of_tests.keys.toArray
+    // Support Chisel2 arguments
+    val optionIndex = args.indexWhere(_.startsWith("--"))
+    implicit val optionArgs = if (optionIndex != -1) {
+      args.slice(optionIndex, args.length)
+    } else {
+      Array[String]()
+    }
+    val nonOptionArgs = if (optionIndex == -1) {
+      args
+    } else {
+      args.slice(0, optionIndex)
+    }
+    val to_call = if( nonOptionArgs.length > 0 ) {
+      nonOptionArgs
+    } else {
+      list_of_tests.keys.toArray
+    }
 
+    val failed_tests = new ArrayBuffer[String]()
     for( arg <- to_call ) {
       if (list_of_tests.contains(arg)) {
-        execute( list_of_tests(arg)() )
+        if(!execute( list_of_tests(arg)() )) {
+          failed_tests += arg
+        }
       }
       else {
         println(s"Error: $arg not found in list of tests")
         println("option\n"+ list_of_tests.keys.toList.sorted.mkString(", "))
       }
+    }
+    if(failed_tests.nonEmpty) {
+      println("Following tests failed in some way\n" + failed_tests.sorted.mkString("\n"))
     }
   }
 }

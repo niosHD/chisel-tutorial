@@ -27,7 +27,23 @@ object Launcher extends UnitTestRunners {
   )
 
   def main(args: Array[String]): Unit = {
-    val to_call = if( args.length > 0) args else list_of_tests.keys.toArray
+    // Support Chisel2 arguments
+    val optionIndex = args.indexWhere(_.startsWith("--"))
+    implicit val optionArgs = if (optionIndex != -1) {
+      args.slice(optionIndex, args.length)
+    } else {
+      Array[String]()
+    }
+    val nonOptionArgs = if (optionIndex == -1) {
+      args
+    } else {
+      args.slice(0, optionIndex)
+    }
+    val to_call = if( nonOptionArgs.length > 0 ) {
+      nonOptionArgs
+    } else {
+      list_of_tests.keys.toArray
+    }
 
     val failed_tests = new ArrayBuffer[String]()
     for( arg <- to_call ) {
