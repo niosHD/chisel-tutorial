@@ -2,7 +2,7 @@ package examples
 
 import Chisel._
 import Chisel.testers._
-import util.Random
+import scala.util.Random
 
 class Cell(isBorn: Boolean) extends Module {
   val io = new Bundle {
