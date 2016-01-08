@@ -34,7 +34,7 @@ object Launcher extends UnitTestRunners{
 
   def main(args: Array[String]): Unit = {
     // Support Chisel2 arguments
-    val optionIndex = args.indexWhere(_.startsWith("--"))
+    val optionIndex = args.indexWhere { x => x.startsWith("--") }
     implicit val optionArgs = if (optionIndex != -1) {
       args.slice(optionIndex, args.length)
     } else {
