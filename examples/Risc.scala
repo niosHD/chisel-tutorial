@@ -3,7 +3,21 @@ package examples
 import Chisel._
 import Chisel.testers._
 
+object Risc {
+  object Opcode extends Enumeration(1) {
+    type Opcode = Value
+    val add, imm = Value
+  }
+  import Opcode._
+
+  def I (op: Opcode, rc: Int, ra: Int, rb: Int) = 
+    op.id << 24 | rc << 16 | ra << 8 | rb
+}
+
+import Risc._
+
 class Risc extends Module {
+  
   val io = new Bundle {
     val isWr   = Bool(INPUT)
     val wrAddr = UInt(INPUT, 8)
@@ -16,8 +30,6 @@ class Risc extends Module {
   val code = Mem(256, Bits(width = 32))
   val pc   = Reg(init=UInt(0, 8))
   
-  val add_op :: imm_op :: Nil = Enum(Bits(), 2)
-
   val inst = code(pc)
   val op   = inst(31,24)
   val rci  = inst(23,16)
@@ -38,25 +50,27 @@ class Risc extends Module {
     pc := UInt(0)
   } .otherwise {
     switch(op) {
-      is(add_op) { rc := ra + rb }
-      is(imm_op) { rc := (rai << UInt(8)) | rbi }
+      is(UInt(Opcode.add.id)) { rc := ra + rb }
+      is(UInt(Opcode.imm.id)) { rc := (rai << UInt(8)) | rbi }
     }
     io.out := rc
     when (rci === UInt(255)) {
       io.valid := Bool(true)
     } .otherwise {
       file(rci) := rc
+      pc := pc + UInt(1)
     }
-    pc := pc + UInt(1)
   }
 }
 
 class RiscUnitTester extends UnitTester {
+  import Risc.Opcode._
+
   val c = Module(new Risc)
-  def wr(addr: UInt, data: UInt)  = {
+  def wr(addr: Int, data: Int)  = {
     poke(c.io.isWr,   1)
-    poke(c.io.wrAddr, addr.litValue().toInt)
-    poke(c.io.wrData, data.litValue().toInt)
+    poke(c.io.wrAddr, addr)
+    poke(c.io.wrData, data)
     step(1)
   }
   def boot()  = {
@@ -69,15 +83,13 @@ class RiscUnitTester extends UnitTester {
     poke(c.io.boot, 0)
     step(1)
   }
-  def I (op: UInt, rc: Int, ra: Int, rb: Int) = 
-    Cat(op, UInt(rc, 8), UInt(ra, 8), UInt(rb, 8))
-  val app  = Array(I(c.imm_op,   1, 0, 1), // r1 <- 1
-                   I(c.add_op,   1, 1, 1), // r1 <- r1 + r1
-                   I(c.add_op,   1, 1, 1), // r1 <- r1 + r1
-                   I(c.add_op, 255, 1, 0)) // rh <- r1
-  wr(UInt(0), Bits(0)) // skip reset
+  val app  = Array(I(imm,   1, 0, 1), // r1 <- 1
+                   I(add,   1, 1, 1), // r1 <- r1 + r1
+                   I(add,   1, 1, 1), // r1 <- r1 + r1
+                   I(add, 255, 1, 0)) // rh <- r1
+  wr(0, 0) // skip reset
   for (addr <- app.indices)
-    wr(UInt(addr), app(addr))
+    wr(addr, app(addr))
   boot()
 
   for(instruction <- app) {
