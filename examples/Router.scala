@@ -1,7 +1,7 @@
 package examples
 
 import Chisel._
-import Chisel.testers._
+import Chisel.testers.UnitTester
 
 class ReadCmd extends Bundle {
   val addr = UInt(width = 32)
@@ -36,6 +36,21 @@ class Router extends Module {
   val n     = 4
   val io    = new RouterIO(n)
   val tbl   = Mem(depth, UInt(width = BigInt(n).bitLength))
+
+  io.read_routing_table_request.init
+  io.load_routing_table_request.init
+  io.read_routing_table_response.init
+  io.in.init
+  io.outs.foreach { out => out.init}
+
+  val ti = Reg(init=UInt(0, width = 16))
+  ti := ti + UInt(1)
+  printf("                    tbl: %d : %d : %d : %d",
+    tbl(0),
+    tbl(1),
+    tbl(2),
+    tbl(3)
+  )
 
   when(io.read_routing_table_request.valid && io.read_routing_table_response.ready) {
     val cmd = io.read_routing_table_request.deq()
@@ -101,4 +116,64 @@ class RouterUnitTester extends UnitTester {
   rd(0, 1)
   rt(0, 1)
   install(c)
+}
+
+import Chisel.testers.DecoupledTester
+
+class RouterDecoupledTester extends DecoupledTester {
+  val device_under_test = Module(new Router)
+  val c = device_under_test
+
+  val ti = Reg(init=UInt(0, width = 16))
+  ti := ti + UInt(1)
+  when(ti >= UInt(50)) { stop() }
+
+  printf("ti %d, read %d %d,   write %d %d   in.ready %d %d",
+        ti,
+        c.io.read_routing_table_request.ready,
+        c.io.read_routing_table_request.valid,
+        c.io.load_routing_table_request.ready,
+        c.io.load_routing_table_request.valid,
+        c.io.in.ready,
+        c.io.in.valid
+  )
+
+  def rd(addr: Int, data: Int) = {
+    input_event(List(c.io.read_routing_table_request.bits.addr -> addr))
+    output_event(List(c.io.read_routing_table_response.bits -> data))
+  }
+
+  def wr(addr: Int, data: Int)  = {
+    input_event(List(
+      c.io.load_routing_table_request.bits.addr -> addr,
+      c.io.load_routing_table_request.bits.data -> data
+    ))
+  }
+
+  def rt(header: Int, body: Int)  = {
+
+    //    for (out <- c.io.outs)
+    //      poke(out.ready, 1)
+    //    poke(c.io.read_routing_table_request.valid,    0)
+    //    poke(c.io.load_routing_table_request.valid,   0)
+    //    poke(c.io.in.valid,       1)
+    //    poke(c.io.in.bits.header, header)
+    //    poke(c.io.in.bits.body,   body)
+
+    //    for (out <- c.io.outs) {
+    //      when(out.valid) {
+    //        printf("io.valid, io.pc %d\n", pc)
+    ////      stop(0)
+    //      } otherwise {
+    //        step(1)
+    //      }
+    //    }
+    //    expect(io.pc < UInt(10))
+  }
+  rd(0, 0)
+  wr(0, 1)
+  rd(0, 1)
+  rt(0, 1)
+
+  finish(show_io_table = true)
 }
