@@ -1,6 +1,7 @@
 package examples
 
 import Chisel.testers.UnitTestRunners
+import unitTests.DecoupledRouterUnitTester
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -10,7 +11,7 @@ object Launcher extends UnitTestRunners{
     "Adder4"              -> (() => { new Adder4UnitTester }),
     "ByteSelector"        -> (() => { new ByteSelectorUnitTester }),
     "Combinational"       -> (() => { new CombinationalUnitTester }),
-    "DecoupledRouter"     -> (() => { new DecoupledRouterUnitTester }),
+    "DecoupledRouter"     -> (() => { new DecoupledRouterUnitTester(20) }),
     "EnableShiftRegister" -> (() => { new EnableShiftRegisterUnitTester }),
     "FullAdder"           -> (() => { new FullAdderUnitTester }),
     "FullAdder2"          -> (() => { new FullAdder2UnitTester }),

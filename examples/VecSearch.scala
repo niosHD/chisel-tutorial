@@ -11,7 +11,7 @@ class VecSearch extends Module {
   val io = new Bundle {
     val out = UInt(OUTPUT,  4)
   }
-  val index = Reg(init = UInt(0, width = 3))
+  val index = Reg(init = UInt(0, width = 4))
   val elts  = Wire(init = Vec(VecSearchTest.pattern.map(UInt(_, 4))))
   index := index + UInt(1)
   io.out := elts(index)
