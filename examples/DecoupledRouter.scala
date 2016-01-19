@@ -1,6 +1,4 @@
-// See LICENSE for license details.
-
-package unitTests
+package examples
 
 import Chisel._
 import Chisel.testers._
@@ -8,7 +6,7 @@ import Chisel.testers._
 
 import scala.util.Random
 
-object Router {
+object DecoupledRouter {
   val addressWidth    = 32
   val dataWidth       = 64
   val headerWidth     =  8
@@ -16,47 +14,47 @@ object Router {
   val numberOfOutputs =  4
 }
 
-class ReadCmd extends Bundle {
-  val addr = UInt(width = Router.addressWidth)
-}
-
-class WriteCmd extends ReadCmd {
-  val data = UInt(width = Router.addressWidth)
-}
-
-class Packet extends Bundle {
-  val header = UInt(width = Router.headerWidth)
-  val body   = Bits(width = Router.dataWidth)
-}
-
-/**
-  * This router circuit
-  * It routes a packet placed on it's input to one of n output ports
-  *
-  * @param n is number of fanned outputs for the routed packet
-  */
-class RouterIO(n: Int) extends Bundle {
-  //  override def cloneType           = new RouterIO(n).asInstanceOf[this.type]
-  val read_routing_table_request   = new DeqIO(new ReadCmd())
-  val read_routing_table_response  = new EnqIO(UInt(width = Router.headerWidth))
-  val load_routing_table_request   = new DeqIO(new WriteCmd())
-  val in                           = new DeqIO(new Packet())
-  val outs                         = Vec(n, new EnqIO(new Packet()))
-}
-
 /**
   * routes packets by using their header as an index into an externally loaded and readable table,
   * The number of addresses recognized does not need to match the number of outputs
   */
-class Router extends Module {
-  val depth = Router.routeTableSize
-  val n     = Router.numberOfOutputs
-  val io    = new RouterIO(n)
+class DecoupledRouter extends Module {
+  val depth = DecoupledRouter.routeTableSize
+  val n     = DecoupledRouter.numberOfOutputs
+  val io    = new DecoupledRouterIO(n)
   val tbl   = Mem(depth, UInt(width = BigInt(n).bitLength))
+
+  class ReadCmd extends Bundle {
+    val addr = UInt(width = DecoupledRouter.addressWidth)
+  }
+
+  class WriteCmd extends ReadCmd {
+    val data = UInt(width = DecoupledRouter.addressWidth)
+  }
+
+  class Packet extends Bundle {
+    val header = UInt(width = DecoupledRouter.headerWidth)
+    val body   = Bits(width = DecoupledRouter.dataWidth)
+  }
+
+  /**
+    * This router circuit
+    * It routes a packet placed on it's input to one of n output ports
+    *
+    * @param n is number of fanned outputs for the routed packet
+    */
+  class DecoupledRouterIO(n: Int) extends Bundle {
+    //  override def cloneType           = new DecoupledRouterIO(n).asInstanceOf[this.type]
+    val read_routing_table_request   = new DeqIO(new ReadCmd())
+    val read_routing_table_response  = new EnqIO(UInt(width = DecoupledRouter.headerWidth))
+    val load_routing_table_request   = new DeqIO(new WriteCmd())
+    val in                           = new DeqIO(new Packet())
+    val outs                         = Vec(n, new EnqIO(new Packet()))
+  }
 
   when(reset) {
     tbl.indices.foreach { index =>
-      tbl(index) := UInt(0, width = Router.addressWidth)
+      tbl(index) := UInt(0, width = DecoupledRouter.addressWidth)
     }
   }
 
@@ -72,18 +70,20 @@ class Router extends Module {
     ))
   }
 
-  when(io.load_routing_table_request.fire()) {
+  when(io.load_routing_table_request.valid) {
     val cmd = io.load_routing_table_request.deq()
     tbl(cmd.addr) := cmd.data
     printf("setting tbl(%d) to %d", cmd.addr, cmd.data)
   }
 
-  when(io.in.fire()) {
-    val pkt = io.in.deq()
-    val idx = tbl(pkt.header(log2Up(Router.routeTableSize), 0))
-    //    val idx = tbl(pkt.header(3, 0))
-    io.outs(idx).enq(pkt)
-    printf("got packet to route header %d, data %d, being routed to out(%d) ", pkt.header, pkt.body, tbl(pkt.header))
+  when(io.in.valid) {
+    val pkt = io.in.bits
+    val idx = tbl(pkt.header(log2Up(DecoupledRouter.routeTableSize), 0))
+    when(io.outs(idx).ready) {
+      io.in.deq()
+      io.outs(idx).enq(pkt)
+      printf("got packet to route header %d, data %d, being routed to out(%d) ", pkt.header, pkt.body, tbl(pkt.header))
+    }
   }
 }
 
@@ -119,21 +119,21 @@ class DecoupledRouterUnitTester(number_of_packets_to_send: Int) extends Decouple
 
   readRoutingTable(0, 0)              // confirm we initialized the routing table
 
-  for(i <- 0 until Router.numberOfOutputs) {
-    writeRoutingTableWithConfirm(i, (i + 1) % Router.numberOfOutputs) // load routing table, confirm each write as built
+  for(i <- 0 until DecoupledRouter.numberOfOutputs) {
+    writeRoutingTableWithConfirm(i, (i + 1) % DecoupledRouter.numberOfOutputs) // load routing table, confirm each write as built
   }
-  for(i <- Router.numberOfOutputs - 1 to 0 by -1) {
-    readRoutingTable(i, (i + 1) % Router.numberOfOutputs) // check them in reverse order just for fun
+  for(i <- DecoupledRouter.numberOfOutputs - 1 to 0 by -1) {
+    readRoutingTable(i, (i + 1) % DecoupledRouter.numberOfOutputs) // check them in reverse order just for fun
   }
 
   // send some regular packets
-  for(i <- 0 until Router.numberOfOutputs) {
+  for(i <- 0 until DecoupledRouter.numberOfOutputs) {
     routePacket(i, i * 3, (i + 1) % 4)
   }
 
   // generate a new routing table
-  val new_routing_table = Array.tabulate(Router.routeTableSize) { _ =>
-    scala.util.Random.nextInt(Router.numberOfOutputs)
+  val new_routing_table = Array.tabulate(DecoupledRouter.routeTableSize) { _ =>
+    scala.util.Random.nextInt(DecoupledRouter.numberOfOutputs)
   }
 
   // load a new routing table
@@ -144,7 +144,7 @@ class DecoupledRouterUnitTester(number_of_packets_to_send: Int) extends Decouple
   // send a bunch of packets, with random values
   for(i <- 0 to number_of_packets_to_send) {
     val data = Random.nextInt(Int.MaxValue-1)
-    routePacket(i % Router.routeTableSize, data, new_routing_table(i % Router.routeTableSize))
+    routePacket(i % DecoupledRouter.routeTableSize, data, new_routing_table(i % DecoupledRouter.routeTableSize))
   }
 
   finish(show_io_table = true)

@@ -1,7 +1,6 @@
 package examples
 
 import Chisel.testers.UnitTestRunners
-import unitTests.DecoupledRouterUnitTester
 
 import scala.collection.mutable.ArrayBuffer
 
