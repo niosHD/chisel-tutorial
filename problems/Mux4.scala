@@ -27,7 +27,7 @@ class Mux4 extends Module {
   m0.io.in1 := io.in1
 }
 
-class Mux4Tests extends UnitTester {  
+class Mux4Tests extends SteppedHWIOTester {
   val c = Module(new Mux4)
   for (s0 <- 0 until 2) {
     for (s1 <- 0 until 2) {

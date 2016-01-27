@@ -25,7 +25,7 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   io.target := index
 }
 
-class DynamicMemorySearchTests(val n: Int, val w: Int) extends UnitTester {
+class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val c = Module(new DynamicMemorySearch(n, w))
   val list = Array.fill(c.n){ 0 }
   for (k <- 0 until 16) {

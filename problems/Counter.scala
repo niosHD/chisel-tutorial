@@ -35,7 +35,7 @@ class Counter extends Module {
 
 }
 
-class CounterTest extends UnitTester {
+class CounterTest extends SteppedHWIOTester {
   val c = Module(new Counter)
   val maxInt  = 16
   var curCnt  = 0

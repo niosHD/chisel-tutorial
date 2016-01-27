@@ -14,7 +14,7 @@ class VecShiftRegister extends Module {
   io.out := UInt(0)
 }
 
-class VecShiftRegisterTests extends UnitTester { 
+class VecShiftRegisterTests extends SteppedHWIOTester {
   val c = Module(new VecShiftRegister)
   val reg     = Array.fill(4){ 0 }
   val ins     = Array.fill(4){ 0 }

@@ -21,7 +21,7 @@ class Mul extends Module {
   // -------------------------------- \\
 }
 
-class MulTests extends UnitTester {
+class MulTests extends SteppedHWIOTester {
   val c = Module(new Mul)
   val maxInt  = 1 << 4
   for (i <- 0 until 10) {

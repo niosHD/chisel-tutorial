@@ -13,7 +13,7 @@ class VecShiftRegisterSimple extends Module {
   io.out := UInt(0)
 }
 
-class VecShiftRegisterSimpleTests extends UnitTester { 
+class VecShiftRegisterSimpleTests extends SteppedHWIOTester {
   val c = Module(new VecShiftRegisterSimple)
   val reg = Array.fill(4){ 0 }
   for (t <- 0 until 16) {

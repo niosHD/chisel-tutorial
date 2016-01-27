@@ -17,12 +17,15 @@ class VecSearch extends Module {
   io.out := elts(index)
 }
 
-class VecSearchUnitTester extends UnitTester {
-  val c = Module(new VecSearch)
-  val list = VecSearchTest.pattern
-  for (elt <- list) {
-    expect(c.io.out, elt)
-    step(1)
+class VecSearchUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new VecSearch)
+  val c = device_under_test
+
+  testBlock {
+    val list = VecSearchTest.pattern
+    for (elt <- list) {
+      expect(c.io.out, elt)
+      step(1)
+    }
   }
-  install(c)
 }

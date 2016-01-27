@@ -18,7 +18,7 @@ class RealGCD extends Module {
 
 }
 
-class RealGCDTests extends UnitTester {
+class RealGCDTests extends SteppedHWIOTester {
   def compute_gcd(a: Int, b: Int): Tuple2[Int, Int] = {
     var x = a
     var y = b

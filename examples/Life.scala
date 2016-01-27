@@ -49,16 +49,19 @@ class Life(val n: Int) extends Module {
   }
 }
 
-class LifeUnitTester(nLives: Int = 3) extends UnitTester {
-  val c = Module(new Life(nLives))
-  for (t <- 0 until 16) {
-    step(1)
-    for (j <- 0 until c.n) {
-      for (i <- 0 until c.n) {
-        printf("0x%x", /* peek( */c.io.state(c.idx(i, j))/*)*/)
+class LifeUnitTester(nLives: Int = 3) extends SteppedHWIOTester {
+  val device_under_test = Module(new Life(nLives))
+  val c = device_under_test
+
+  testBlock {
+    for (t <- 0 until 16) {
+      step(1)
+      for (j <- 0 until c.n) {
+        for (i <- 0 until c.n) {
+          printf("0x%x", /* peek( */ c.io.state(c.idx(i, j)) /*)*/)
+        }
+        printf("\n")
       }
-      printf("\n")
     }
   }
-  install(c)
 }

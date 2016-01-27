@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class Mux4 extends Module {
   val io = new Bundle {
@@ -39,7 +39,7 @@ class Mux4 extends Module {
   io.out := m2.io.out
 }
 
-class Mux4Tests extends UnitTester {  
+class Mux4Tests extends SteppedHWIOTester {
   val c = Module(new Mux4)
   for (s0 <- 0 until 2) {
     for (s1 <- 0 until 2) {

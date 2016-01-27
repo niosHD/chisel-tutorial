@@ -10,7 +10,7 @@ class Hello extends Module {
   io.out := UInt(42)
 }
 
-class HelloTests extends UnitTester {
+class HelloTests extends SteppedHWIOTester {
   val c = Module(new Hello)
   step(1)
   expect(c.io.out, 42)
@@ -20,7 +20,7 @@ class HelloTests extends UnitTester {
 object Hello {
   def main(mainArgs: Array[String]): Unit = {
     implicit val args = mainArgs.slice(1, mainArgs.length)
-    val tester = new UnitTester
+    val tester = new SteppedHWIOTester
     tester.execute { new HelloTests }
   }
 }

@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class Memo extends Module {
   val io = new Bundle {
@@ -31,7 +31,7 @@ class Memo extends Module {
 
 }
 
-class MemoTests extends UnitTester {
+class MemoTests extends SteppedHWIOTester {
   val c = Module(new Memo)
   def rd(addr: Int, data: Int) = {
     poke(c.io.ren, 1)

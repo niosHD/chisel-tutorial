@@ -13,7 +13,7 @@ class Accumulator extends Module {
   io.out := UInt(0)
 }
 
-class AccumulatorTests extends UnitTester {
+class AccumulatorTests extends SteppedHWIOTester {
   val c = Module(new Accumulator)
   var tot = 0
   for (t <- 0 until 16) {

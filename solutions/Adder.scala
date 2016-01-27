@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class Adder(val w: Int) extends Module {
   val io = new Bundle {
@@ -12,7 +12,7 @@ class Adder(val w: Int) extends Module {
   io.out := io.in0 + io.in1
 }
 
-class AdderTests(w: Int) extends UnitTester {
+class AdderTests(w: Int) extends SteppedHWIOTester {
   val c = Module(new Adder(w))
   for (i <- 0 until 10) {
     val in0 = rnd.nextInt(1 << c.w)

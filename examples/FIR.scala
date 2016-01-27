@@ -36,7 +36,7 @@ import scala.collection.mutable.ArrayBuffer
 //}
 //*/
 //
-//class FIRUnitTester extends UnitTester {
+//class FIRUnitTester extends SteppedHWIOTester {
 //  val c = Module(new FIR)
 //  var px = 0.0f
 //  for (i <- 0 until 10) {

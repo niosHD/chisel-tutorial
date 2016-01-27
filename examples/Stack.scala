@@ -35,38 +35,41 @@ class Stack(val depth: Int) extends Module {
   io.dataOut := out
 }
 
-class StackUnitTester(val depth: Int) extends UnitTester {
-  val c = Module(new Stack(depth))
-  var nxtDataOut = 0
-  var dataOut = 0
-  val stack = new ScalaStack[Int]()
+class StackUnitTester(val depth: Int) extends SteppedHWIOTester {
+  val device_under_test = Module(new Stack(depth))
+  val c = device_under_test
 
-  for (t <- 0 until 16) {
-    val enable  = rnd.nextInt(2)
-    val push    = rnd.nextInt(2)
-    val pop     = rnd.nextInt(2)
-    val dataIn  = rnd.nextInt(256)
+  testBlock {
+    var nxtDataOut = 0
+    var dataOut = 0
+    val stack = new ScalaStack[Int]()
 
-    if (enable == 1) {
-      dataOut = nxtDataOut
-      if (push == 1 && stack.length < c.depth) {
-        stack.push(dataIn)
-      } else if (pop == 1 && stack.nonEmpty) {
-        stack.pop()
+    for (t <- 0 until 16) {
+      val enable = rnd.nextInt(2)
+      val push = rnd.nextInt(2)
+      val pop = rnd.nextInt(2)
+      val dataIn = rnd.nextInt(256)
+
+      if (enable == 1) {
+        dataOut = nxtDataOut
+        if (push == 1 && stack.length < c.depth) {
+          stack.push(dataIn)
+        } else if (pop == 1 && stack.nonEmpty) {
+          stack.pop()
+        }
+        if (stack.nonEmpty) {
+          nxtDataOut = stack.top
+        }
       }
-      if (stack.nonEmpty) {
-        nxtDataOut = stack.top
-      }
+
+      poke(c.io.pop, pop)
+      poke(c.io.push, push)
+      poke(c.io.en, enable)
+      poke(c.io.dataIn, dataIn)
+      step(1)
+      expect(c.io.dataOut, dataOut)
     }
-
-    poke(c.io.pop,    pop)
-    poke(c.io.push,   push)
-    poke(c.io.en,     enable)
-    poke(c.io.dataIn, dataIn)
-    step(1)
-    expect(c.io.dataOut, dataOut)
   }
-  install(c)
 }
 
 

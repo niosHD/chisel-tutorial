@@ -12,7 +12,7 @@ class Max2 extends Module {
   io.out := Mux(io.in0 > io.in1, io.in0, io.in1)
 }
 
-class Max2Tests extends UnitTester {
+class Max2Tests extends SteppedHWIOTester {
   val c = Module(new Max2)
   for (i <- 0 until 10) {
     // FILL THIS IN HERE

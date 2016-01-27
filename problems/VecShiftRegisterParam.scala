@@ -12,7 +12,7 @@ class VecShiftRegisterParam(val n: Int, val w: Int) extends Module {
   io.out := UInt(0)
 }
 
-class VecShiftRegisterParamTests(val n: Int, val w: Int) extends UnitTester { 
+class VecShiftRegisterParamTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val c = Module(new VecShiftRegisterParam(n, w))
   val reg = Array.fill(c.n){ 0 }
   for (t <- 0 until 16) {

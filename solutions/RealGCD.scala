@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class RealGCDInput extends Bundle {
   val a = Bits(width = 16)
@@ -38,7 +38,7 @@ class RealGCD extends Module {
   }
 }
 
-class RealGCDTests extends UnitTester {
+class RealGCDTests extends SteppedHWIOTester {
   def compute_gcd(a: Int, b: Int): Tuple2[Int, Int] = {
     var x = a
     var y = b

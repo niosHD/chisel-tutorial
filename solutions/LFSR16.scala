@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class LFSR16 extends Module {
   val io = new Bundle {
@@ -16,7 +16,7 @@ class LFSR16 extends Module {
   io.out := res
 }
 
-class LFSR16Tests extends UnitTester {
+class LFSR16Tests extends SteppedHWIOTester {
   val c = Module(new LFSR16)
   var res = 1
   for (t <- 0 until 16) {

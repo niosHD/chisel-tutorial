@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class VendingMachine extends Module {
   val io = new Bundle {
@@ -33,7 +33,7 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests extends UnitTester {  
+class VendingMachineTests extends SteppedHWIOTester {
   val c = Module(new VendingMachine)
   var money = 0
   var isValid = 0

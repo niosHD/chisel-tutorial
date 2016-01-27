@@ -17,7 +17,7 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests extends UnitTester {  
+class VendingMachineTests extends SteppedHWIOTester {
   val c = Module(new VendingMachine)
   var money = 0
   var isValid = 0

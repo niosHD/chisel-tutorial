@@ -13,7 +13,7 @@ class Adder(val w: Int) extends Module {
   io.out := UInt(0)
 }
 
-class AdderTests(w: Int) extends UnitTester {
+class AdderTests(w: Int) extends SteppedHWIOTester {
   val c = Module(new Adder(w))
   for (i <- 0 until 10) {
     val in0 = rnd.nextInt(1 << c.w)

@@ -29,7 +29,7 @@ class SingleEvenFilter[T <: UInt](dtype: T) extends Filter(dtype) {
   io.out <> io.in
 }
 
-class SingleEvenFilterTests(w: Int) extends UnitTester {
+class SingleEvenFilterTests(w: Int) extends SteppedHWIOTester {
   val c = Module(new SingleEvenFilter(UInt(width = w)))
   val maxInt  = 1 << w
   for (i <- 0 until 10) {

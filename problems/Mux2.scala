@@ -14,7 +14,7 @@ class Mux2 extends Module {
   io.out := (io.sel & io.in1) | (~io.sel & io.in0)
 }
 
-class Mux2Tests extends UnitTester {
+class Mux2Tests extends SteppedHWIOTester {
   val c = Module(new Mux2)
   val n = pow(2, 3).toInt
   for (s <- 0 until 2) {

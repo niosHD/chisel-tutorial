@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 abstract class Filter[T <: Data](dtype: T) extends Module {
   val io = new Bundle {
@@ -32,7 +32,7 @@ class SingleEvenFilter[T <: UInt](dtype: T) extends Filter(dtype) {
   io.out        := even.io.out
 }
 
-class SingleEvenFilterTests(w: Int) extends UnitTester {
+class SingleEvenFilterTests(w: Int) extends SteppedHWIOTester {
   val c = Module(new SingleEvenFilter(UInt(width = w)))
   val maxInt  = 1 << w
   for (i <- 0 until 10) {

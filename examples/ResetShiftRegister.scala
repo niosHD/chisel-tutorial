@@ -23,22 +23,24 @@ class ResetShiftRegister extends Module {
   io.out := r3
 }
 
-class ResetShiftRegisterUnitTester extends UnitTester {
-  val c = Module(new ResetShiftRegister)
-  val ins = Array.fill(4){ 0 }
-  val regs = Array.fill(4){ 0 }
-  var k   = 0
-  for (n <- 0 until 16) {
-    val in    =  rnd.nextInt(16)
-    val shift =  rnd.nextInt(2)
-    poke(c.io.in,    in)
-    poke(c.io.shift, shift)
-    step(1)
-    if (shift == 1) {
-      ins(k % 4) = in
-      k = k + 1
+class ResetShiftRegisterUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new ResetShiftRegister)
+
+  testBlock {
+    val ins = Array.fill(4) {0}
+    val regs = Array.fill(4) {0}
+    var k = 0
+    for (n <- 0 until 16) {
+      val in = rnd.nextInt(16)
+      val shift = rnd.nextInt(2)
+      poke(device_under_test.io.in, in)
+      poke(device_under_test.io.shift, shift)
+      step(1)
+      if (shift == 1) {
+        ins(k % 4) = in
+        k = k + 1
+      }
+      expect(device_under_test.io.out, if (k < 4) 0 else ins(k % 4))
     }
-    expect(c.io.out, if (k < 4) 0 else ins(k % 4))
   }
-  install(c)
 }

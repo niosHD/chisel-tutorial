@@ -25,7 +25,7 @@ class Memo extends Module {
 
 }
 
-class MemoTests extends UnitTester {
+class MemoTests extends SteppedHWIOTester {
   val c = Module(new Memo)
   def rd(addr: Int, data: Int) = {
     poke(c.io.ren, 1)

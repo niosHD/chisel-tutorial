@@ -12,7 +12,7 @@ class LFSR16 extends Module {
   io.out := UInt(0)
 }
 
-class LFSR16Tests extends UnitTester {
+class LFSR16Tests extends SteppedHWIOTester {
   val c = Module(new LFSR16)
   var res = 1
   for (t <- 0 until 16) {

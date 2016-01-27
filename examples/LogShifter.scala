@@ -34,8 +34,9 @@ class LogShifter extends Module {
   }
 }
 
-class LogShifterUnitTester extends UnitTester {
-  val c = Module(new LogShifter)
-  install(c)
+class LogShifterUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new LogShifter)
+
+  testBlock {}
 }
 

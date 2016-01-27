@@ -29,32 +29,36 @@ class MemorySearch extends Module {
   io.address := index
 }
 
-class MemorySearchUnitTester extends UnitTester {
-  val c = Module(new MemorySearch)
-  val list = MemorySearchTestData.element_list
-  val n = 20
-  val maxT = n * (list.length + 3)
-  for (k <- 0 until n) {
-    val target = rnd.nextInt(16)
-    poke(c.io.en,     1)
-    poke(c.io.target, target)
-    step(1)
-    poke(c.io.en,     0)
-//    when(c.io.done) {
-//      printf("Looking for 0x%x, found 0x%x\n", UInt(target), c.io.address)
-//      when(c.io.address < UInt(list.length)) {
-//        expect(c.elts(c.io.address), target)
-//      }
-//    }
-    val expectedIndex = if (list.contains(target)) {
-      list.indexOf(target)
-    } else {
-      list.length
+class MemorySearchUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new MemorySearch)
+
+  val c = device_under_test
+
+  testBlock {
+    val list = MemorySearchTestData.element_list
+    val n = 20
+    val maxT = n * (list.length + 3)
+    for (k <- 0 until n) {
+      val target = rnd.nextInt(16)
+      poke(c.io.en, 1)
+      poke(c.io.target, target)
+      step(1)
+      poke(c.io.en, 0)
+      //    when(c.io.done) {
+      //      printf("Looking for 0x%x, found 0x%x\n", UInt(target), c.io.address)
+      //      when(c.io.address < UInt(list.length)) {
+      //        expect(c.elts(c.io.address), target)
+      //      }
+      //    }
+      val expectedIndex = if (list.contains(target)) {
+        list.indexOf(target)
+      } else {
+        list.length
+      }
+      step(expectedIndex)
+      expect(c.io.done, 1)
+      expect(c.io.address, expectedIndex)
+      step(1)
     }
-    step(expectedIndex)
-    expect(c.io.done, 1)
-    expect(c.io.address, expectedIndex)
-    step(1)
   }
-  install(c)
 }

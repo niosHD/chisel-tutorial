@@ -14,7 +14,7 @@ class MaxN(val n: Int, val w: Int) extends Module {
   io.out := io.ins.reduceLeft(Max2)
 }
 
-class MaxNTests(val n: Int, val w: Int) extends UnitTester {
+class MaxNTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val c = Module(new MaxN(n, w))
   val ins = Array.fill(c.n){ 0 }
   for (i <- 0 until 10) {
