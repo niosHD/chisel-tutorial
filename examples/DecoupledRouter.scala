@@ -33,7 +33,7 @@ class DecoupledPacket extends Bundle {
 class DecoupledRouterIO(n: Int) extends Bundle {
   //  override def cloneType           = new DecoupledRouterIO(n).asInstanceOf[this.type]
   val read_routing_table_request   = new DeqIO(new DecoupledReadCmd())
-  val read_routing_table_response  = new EnqIO(UInt(width = DecoupledRouter.headerWidth))
+  val read_routing_table_response  = new EnqIO(UInt(width = DecoupledRouter.addressWidth))
   val load_routing_table_request   = new DeqIO(new DecoupledWriteCmd())
   val in                           = new DeqIO(new DecoupledPacket())
   val outs                         = Vec(n, new EnqIO(new DecoupledPacket()))
@@ -69,18 +69,16 @@ class DecoupledRouter extends Module {
     .elsewhen(io.load_routing_table_request.valid) {
       val cmd = io.load_routing_table_request.deq()
       tbl(cmd.addr) := cmd.data
-      printf("setting tbl(%d) to %d", cmd.addr, cmd.data)
+      printf("setting tbl(%d) to %d\n", cmd.addr, cmd.data)
     }
     .elsewhen(io.in.valid) {
       val pkt = io.in.bits
       val idx = tbl(pkt.header(log2Up(DecoupledRouter.routeTableSize), 0))
-      //    TODO: uncomment next line for correctness and to reveal firrtl indexing error
-      //    when(io.outs(idx).ready) {
-      io.in.deq()
-      io.outs(idx).enq(pkt)
-      printf("got packet to route header %d, data %d, being routed to out(%d) ", pkt.header, pkt.body, tbl(pkt.header))
-      //    TODO: uncomment following line for correctness and to reveal firrtl indexing error
-      //    }
+      when(io.outs(idx).ready) {
+        io.in.deq()
+        io.outs(idx).enq(pkt)
+        printf("got packet to route header %d, data %d, being routed to out(%d)\n", pkt.header, pkt.body, tbl(pkt.header))
+      }
     }
 }
 
@@ -146,3 +144,4 @@ class DecoupledRouterUnitTester(number_of_packets_to_send: Int) extends OrderedD
     routePacket(i % DecoupledRouter.routeTableSize, data, new_routing_table(i % DecoupledRouter.routeTableSize))
   }
 }
+
