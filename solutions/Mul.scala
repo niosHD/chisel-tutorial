@@ -29,15 +29,18 @@ class Mul extends Module {
 }
 
 class MulTests extends SteppedHWIOTester {
-  val c = Module(new Mul)
-  val maxInt  = 1 << 4
-  for (i <- 0 until 10) {
-    val x = rnd.nextInt(maxInt)
-    val y = rnd.nextInt(maxInt)
-    poke(c.io.x, x)
-    poke(c.io.y, y)
-    expect(c.io.z, (x * y))
-    step(1)
+  val device_under_test = Module(new Mul)
+  val c = device_under_test
+
+  testBlock {
+    val maxInt = 1 << 4
+    for (i <- 0 until 10) {
+      val x = rnd.nextInt(maxInt)
+      val y = rnd.nextInt(maxInt)
+      poke(c.io.x, x)
+      poke(c.io.y, y)
+      expect(c.io.z, (x * y))
+      step(1)
+    }
   }
-  install(c)
 }

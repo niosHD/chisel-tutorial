@@ -16,13 +16,11 @@ class TblUnitTester extends SteppedHWIOTester {
   val device_under_test = Module(new Tbl)
   val c = device_under_test
 
-  testBlock {
-    for (t <- 0 until 16) {
-      val addr = rnd.nextInt(256)
-      poke(c.io.addr, addr)
-      expect(c.io.out, addr)
-      step(1)
-    }
+  for (t <- 0 until 16) {
+    val addr = rnd.nextInt(256)
+    poke(c.io.addr, addr)
+    expect(c.io.out, addr)
+    step(1)
   }
 }
 

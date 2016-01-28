@@ -89,62 +89,60 @@ class DecoupledRouterUnitTester(number_of_packets_to_send: Int) extends OrderedD
   val c = device_under_test
   enable_all_debug = true
 
-  testBlock {
-    rnd.setSeed(0)
+  rnd.setSeed(0)
 
-    def readRoutingTable(addr: Int, data: Int): Unit = {
-      inputEvent(c.io.read_routing_table_request.bits.addr -> addr)
-      outputEvent(c.io.read_routing_table_response.bits -> data)
-    }
+  def readRoutingTable(addr: Int, data: Int): Unit = {
+    inputEvent(c.io.read_routing_table_request.bits.addr -> addr)
+    outputEvent(c.io.read_routing_table_response.bits -> data)
+  }
 
-    def writeRoutingTable(addr: Int, data: Int): Unit = {
-      inputEvent(
-        c.io.load_routing_table_request.bits.addr -> addr,
-        c.io.load_routing_table_request.bits.data -> data
-      )
-    }
+  def writeRoutingTable(addr: Int, data: Int): Unit = {
+    inputEvent(
+      c.io.load_routing_table_request.bits.addr -> addr,
+      c.io.load_routing_table_request.bits.data -> data
+    )
+  }
 
-    def writeRoutingTableWithConfirm(addr: Int, data: Int): Unit = {
-      writeRoutingTable(addr, data)
-      readRoutingTable(addr, data)
-    }
+  def writeRoutingTableWithConfirm(addr: Int, data: Int): Unit = {
+    writeRoutingTable(addr, data)
+    readRoutingTable(addr, data)
+  }
 
-    def routePacket(header: Int, body: Int, routed_to: Int): Unit = {
-      inputEvent(c.io.in.bits.header -> header, c.io.in.bits.body -> body)
-      outputEvent(c.io.outs(routed_to).bits.body -> body)
-      logScalaDebug(s"rout_packet $header $body should go to out($routed_to)")
-    }
+  def routePacket(header: Int, body: Int, routed_to: Int): Unit = {
+    inputEvent(c.io.in.bits.header -> header, c.io.in.bits.body -> body)
+    outputEvent(c.io.outs(routed_to).bits.body -> body)
+    logScalaDebug(s"rout_packet $header $body should go to out($routed_to)")
+  }
 
-    readRoutingTable(0, 0) // confirm we initialized the routing table
+  readRoutingTable(0, 0) // confirm we initialized the routing table
 
-    // load routing table, confirm each write as built
-    for (i <- 0 until DecoupledRouter.numberOfOutputs) {
-      writeRoutingTableWithConfirm(i, (i + 1) % DecoupledRouter.numberOfOutputs)
-    }
-    // check them in reverse order just for fun
-    for (i <- DecoupledRouter.numberOfOutputs - 1 to 0 by -1) {
-      readRoutingTable(i, (i + 1) % DecoupledRouter.numberOfOutputs)
-    }
+  // load routing table, confirm each write as built
+  for (i <- 0 until DecoupledRouter.numberOfOutputs) {
+    writeRoutingTableWithConfirm(i, (i + 1) % DecoupledRouter.numberOfOutputs)
+  }
+  // check them in reverse order just for fun
+  for (i <- DecoupledRouter.numberOfOutputs - 1 to 0 by -1) {
+    readRoutingTable(i, (i + 1) % DecoupledRouter.numberOfOutputs)
+  }
 
-    // send some regular packets
-    for (i <- 0 until DecoupledRouter.numberOfOutputs) {
-      routePacket(i, i * 3, (i + 1) % 4)
-    }
+  // send some regular packets
+  for (i <- 0 until DecoupledRouter.numberOfOutputs) {
+    routePacket(i, i * 3, (i + 1) % 4)
+  }
 
-    // generate a new routing table
-    val new_routing_table = Array.tabulate(DecoupledRouter.routeTableSize) { _ =>
-      scala.util.Random.nextInt(DecoupledRouter.numberOfOutputs)
-    }
+  // generate a new routing table
+  val new_routing_table = Array.tabulate(DecoupledRouter.routeTableSize) { _ =>
+    scala.util.Random.nextInt(DecoupledRouter.numberOfOutputs)
+  }
 
-    // load a new routing table
-    for ((destination, index) <- new_routing_table.zipWithIndex) {
-      writeRoutingTable(index, destination)
-    }
+  // load a new routing table
+  for ((destination, index) <- new_routing_table.zipWithIndex) {
+    writeRoutingTable(index, destination)
+  }
 
-    // send a bunch of packets, with random values
-    for (i <- 0 to number_of_packets_to_send) {
-      val data = rnd.nextInt(Int.MaxValue - 1)
-      routePacket(i % DecoupledRouter.routeTableSize, data, new_routing_table(i % DecoupledRouter.routeTableSize))
-    }
+  // send a bunch of packets, with random values
+  for (i <- 0 to number_of_packets_to_send) {
+    val data = rnd.nextInt(Int.MaxValue - 1)
+    routePacket(i % DecoupledRouter.routeTableSize, data, new_routing_table(i % DecoupledRouter.routeTableSize))
   }
 }

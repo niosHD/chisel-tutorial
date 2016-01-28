@@ -27,20 +27,18 @@ class FullAdderUnitTester extends SteppedHWIOTester {
   val c = device_under_test
   enable_all_debug = true
 
-  testBlock {
-    for (t <- 0 until 4) {
-      val a = rnd.nextInt(2)
-      val b = rnd.nextInt(2)
-      val cin = rnd.nextInt(2)
-      val res = a + b + cin
-      val sum = res & 1
-      val cout = (res >> 1) & 1
-      poke(c.io.a, a)
-      poke(c.io.b, b)
-      poke(c.io.cin, cin)
-      expect(c.io.sum, sum)
-      expect(c.io.cout, cout)
-      step(1)
-    }
+  for (t <- 0 until 4) {
+    val a = rnd.nextInt(2)
+    val b = rnd.nextInt(2)
+    val cin = rnd.nextInt(2)
+    val res = a + b + cin
+    val sum = res & 1
+    val cout = (res >> 1) & 1
+    poke(c.io.a, a)
+    poke(c.io.b, b)
+    poke(c.io.cin, cin)
+    expect(c.io.sum, sum)
+    expect(c.io.cout, cout)
+    step(1)
   }
 }

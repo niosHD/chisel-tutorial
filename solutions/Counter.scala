@@ -36,27 +36,30 @@ class Counter extends Module {
 }
 
 class CounterTest extends SteppedHWIOTester {
-  val c = Module(new Counter)
+  val device_under_test = Module(new Counter)
   val maxInt  = 16
   var curCnt  = 0
 
-  def intWrapAround(n: Int, max: Int) = 
-    if(n > max) 0 else n
+  val c = device_under_test
 
-  // let it spin for a bit
-  for (i <- 0 until 5) {
-    step(1)
-  }
+  testBlock {
+    def intWrapAround(n: Int, max: Int) =
+      if (n > max) 0 else n
 
-  for (i <- 0 until 10) {
-    val inc = rnd.nextBoolean()
-    val amt = rnd.nextInt(maxInt)
-    poke(c.io.inc, if (inc) 1 else 0)
-    poke(c.io.amt, amt)
-    step(1)
-    curCnt = if(inc) intWrapAround(curCnt + amt, 255) else curCnt
-    expect(c.io.tot, curCnt)
+    // let it spin for a bit
+    for (i <- 0 until 5) {
+      step(1)
+    }
+
+    for (i <- 0 until 10) {
+      val inc = rnd.nextBoolean()
+      val amt = rnd.nextInt(maxInt)
+      poke(c.io.inc, if (inc) 1 else 0)
+      poke(c.io.amt, amt)
+      step(1)
+      curCnt = if (inc) intWrapAround(curCnt + amt, 255) else curCnt
+      expect(c.io.tot, curCnt)
+    }
   }
-  install(c)
 }
 

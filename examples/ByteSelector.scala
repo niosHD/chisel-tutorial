@@ -25,13 +25,11 @@ class ByteSelectorUnitTester extends SteppedHWIOTester {
   val device_under_test = Module(new ByteSelector)
   val c = device_under_test
 
-  testBlock {
-    val test_in = 12345678
-    for (t <- 0 until 4) {
-      poke(c.io.in, test_in)
-      poke(c.io.offset, t)
-      expect(c.io.out, (test_in >> (t * 8)) & 0xFF)
-      step(1)
-    }
+  val test_in = 12345678
+  for (t <- 0 until 4) {
+    poke(c.io.in, test_in)
+    poke(c.io.offset, t)
+    expect(c.io.out, (test_in >> (t * 8)) & 0xFF)
+    step(1)
   }
 }

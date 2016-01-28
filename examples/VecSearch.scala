@@ -21,11 +21,9 @@ class VecSearchUnitTester extends SteppedHWIOTester {
   val device_under_test = Module(new VecSearch)
   val c = device_under_test
 
-  testBlock {
-    val list = VecSearchTest.pattern
-    for (elt <- list) {
-      expect(c.io.out, elt)
-      step(1)
-    }
+  val list = VecSearchTest.pattern
+  for (elt <- list) {
+    expect(c.io.out, elt)
+    step(1)
   }
 }

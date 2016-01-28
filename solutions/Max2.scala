@@ -13,16 +13,19 @@ class Max2 extends Module {
 }
 
 class Max2Tests extends SteppedHWIOTester {
-  val c = Module(new Max2)
-  for (i <- 0 until 10) {
-    // FILL THIS IN HERE
-    val in0 = rnd.nextInt(256)
-    val in1 = rnd.nextInt(256)
-    poke(c.io.in0, in0)
-    poke(c.io.in1, in1)
-    // FILL THIS IN HERE
-    expect(c.io.out, if (in0 > in1) in0 else in1)
-    step(1)
+  val device_under_test = Module(new Max2)
+  val c = device_under_test
+
+  testBlock {
+    for (i <- 0 until 10) {
+      // FILL THIS IN HERE
+      val in0 = rnd.nextInt(256)
+      val in1 = rnd.nextInt(256)
+      poke(c.io.in0, in0)
+      poke(c.io.in1, in1)
+      // FILL THIS IN HERE
+      expect(c.io.out, if (in0 > in1) in0 else in1)
+      step(1)
+    }
   }
-  install(c)
 }

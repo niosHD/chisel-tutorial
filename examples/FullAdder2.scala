@@ -24,5 +24,4 @@ class FullAdder2 extends Module {
 
 class FullAdder2UnitTester extends SteppedHWIOTester {
   val device_under_test = Module(new FullAdder2)
-  testBlock {}
 }

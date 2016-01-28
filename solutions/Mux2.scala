@@ -15,18 +15,21 @@ class Mux2 extends Module {
 }
 
 class Mux2Tests extends SteppedHWIOTester {
-  val c = Module(new Mux2)
-  val n = pow(2, 3).toInt
-  for (s <- 0 until 2) {
-    for (i0 <- 0 until 2) {
-      for (i1 <- 0 until 2) {
-        poke(c.io.sel, s)
-        poke(c.io.in1, i1)
-        poke(c.io.in0, i0)
-        expect(c.io.out, (if (s == 1) i1 else i0))
-        step(1)
+  val device_under_test = Module(new Mux2)
+  val c = device_under_test
+
+  testBlock {
+    val n = pow(2, 3).toInt
+    for (s <- 0 until 2) {
+      for (i0 <- 0 until 2) {
+        for (i1 <- 0 until 2) {
+          poke(c.io.sel, s)
+          poke(c.io.in1, i1)
+          poke(c.io.in0, i0)
+          expect(c.io.out, (if (s == 1) i1 else i0))
+          step(1)
+        }
       }
     }
   }
-  install(c)
 }

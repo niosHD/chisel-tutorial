@@ -21,16 +21,14 @@ class HiLoMultiplierUnitTester extends SteppedHWIOTester {
 
   val c = device_under_test
 
-  testBlock {
-    for (t <- 0 until 4) {
-      val rnd0: BigInt = rnd.nextInt(65535)
-      val rnd1: BigInt = rnd.nextInt(65535)
-      val ref_out = UInt(rnd0 * rnd1, width = 32)
-      poke(c.io.A, rnd0.toInt)
-      poke(c.io.B, rnd1.toInt)
-      expect(c.io.Lo, ref_out(15, 0).litValue().toInt)
-      expect(c.io.Hi, ref_out(31, 16).litValue().toInt)
-      step(1)
-    }
+  for (t <- 0 until 4) {
+    val rnd0: BigInt = rnd.nextInt(65535)
+    val rnd1: BigInt = rnd.nextInt(65535)
+    val ref_out = UInt(rnd0 * rnd1, width = 32)
+    poke(c.io.A, rnd0.toInt)
+    poke(c.io.B, rnd1.toInt)
+    expect(c.io.Lo, ref_out(15, 0).litValue().toInt)
+    expect(c.io.Hi, ref_out(31, 16).litValue().toInt)
+    step(1)
   }
 }

@@ -54,17 +54,14 @@ class SmallOdds3(filter_width: Int) extends Module {
 class SmallOdds3Tester(width: Int) extends OrderedDecoupledHWIOTester {
   val device_under_test = Module(new SmallOdds3(filter_width = width))
 
-  testBlock {
-    rnd.setSeed(0L)
-    for (i <- 0 to 100) {
-      val num = rnd.nextInt(20)
-      println(s"random value $i $num")
-      inputEvent(device_under_test.io.in.bits -> num)
-      if (num % 2 == 1 && num < 10) {
-        outputEvent(device_under_test.io.out.bits -> num)
-      }
+  rnd.setSeed(0L)
+  for (i <- 0 to 100) {
+    val num = rnd.nextInt(20)
+    println(s"random value $i $num")
+    inputEvent(device_under_test.io.in.bits -> num)
+    if (num % 2 == 1 && num < 10) {
+      outputEvent(device_under_test.io.out.bits -> num)
     }
   }
 }
-
 

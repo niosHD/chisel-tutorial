@@ -28,23 +28,29 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
 }
 
 class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester {
-  val c = Module(new DynamicMemorySearch(n, w))
-  val list = Array.fill(c.n){ 0 }
+  val device_under_test = Module(new DynamicMemorySearch(n, w))
+  val c = device_under_test
+
+  enable_all_debug = true
+
+  val list = Array.fill(c.n)(0)
+  rnd.setSeed(0L)
+
   for (k <- 0 until 16) {
     // WRITE A WORD
-    poke(c.io.en,   0)
+    poke(c.io.en, 0)
     poke(c.io.isWr, 1)
-    val wrAddr = rnd.nextInt(c.n-1)
-    val data   = rnd.nextInt((1 << c.w) - 1) + 1 // can't be 0
+    val wrAddr = rnd.nextInt(c.n - 1)
+    val data = rnd.nextInt((1 << c.w) - 1) + 1 // can't be 0
     poke(c.io.wrAddr, wrAddr)
-    poke(c.io.data,   data)
+    poke(c.io.data, data)
     step(1)
     list(wrAddr) = data
     // SETUP SEARCH
     val target = if (k > 12) rnd.nextInt(1 << c.w) else data
     poke(c.io.isWr, 0)
     poke(c.io.data, target)
-    poke(c.io.en,   1)
+    poke(c.io.en, 1)
     step(1)
     poke(c.io.en, 0)
     step(1)
@@ -58,5 +64,4 @@ class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester
     expect(c.io.target, expectedIndex)
     step(1)
   }
-  install(c)
 }

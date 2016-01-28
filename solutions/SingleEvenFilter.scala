@@ -33,16 +33,19 @@ class SingleEvenFilter[T <: UInt](dtype: T) extends Filter(dtype) {
 }
 
 class SingleEvenFilterTests(w: Int) extends SteppedHWIOTester {
-  val c = Module(new SingleEvenFilter(UInt(width = w)))
-  val maxInt  = 1 << w
-  for (i <- 0 until 10) {
-    val in = rnd.nextInt(maxInt)
-    poke(c.io.in.valid, 1)
-    poke(c.io.in.bits, in)
-    val isSingleEven = if ((in <= 9) && (in%2 == 1)) 1 else 0
-    expect(c.io.out.valid, isSingleEven)
-    expect(c.io.out.bits, in)
-    step(1)
+  val device_under_test = Module(new SingleEvenFilter(UInt(width = w)))
+  val c = device_under_test
+
+  testBlock {
+    val maxInt = 1 << w
+    for (i <- 0 until 10) {
+      val in = rnd.nextInt(maxInt)
+      poke(c.io.in.valid, 1)
+      poke(c.io.in.bits, in)
+      val isSingleEven = if ((in <= 9) && (in % 2 == 1)) 1 else 0
+      expect(c.io.out.valid, isSingleEven)
+      expect(c.io.out.bits, in)
+      step(1)
+    }
   }
-  install(c)
 }
