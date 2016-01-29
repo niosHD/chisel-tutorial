@@ -10,7 +10,7 @@ object Counter {
     Mux(n > max, UInt(0), n)
 
   // ---------------------------------------- \\
-  // Modify this function to increment by the
+  // increment by the
   // amt only when en is asserted
   // ---------------------------------------- \\
 
