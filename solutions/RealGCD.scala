@@ -60,20 +60,18 @@ class RealGCDTests extends SteppedHWIOTester {
 
   val c = device_under_test
 
-  testBlock {
-    for ((a, b) <- inputs) {
-      poke(c.io.in.bits.a, a)
-      poke(c.io.in.bits.b, b)
-      poke(c.io.in.valid, 1)
-      step(1)
-      poke(c.io.in.valid, 0)
+  for ((a, b) <- inputs) {
+    poke(c.io.in.bits.a, a)
+    poke(c.io.in.bits.b, b)
+    poke(c.io.in.valid, 1)
+    step(1)
+    poke(c.io.in.valid, 0)
 
-      val (expected_gcd, steps) = compute_gcd(a, b)
-      step(steps) // -1 is because we step(1) already to toggle the enable
-      expect(c.io.out.bits, expected_gcd)
-      expect(c.io.out.valid, 1)
-      step(1)
+    val (expected_gcd, steps) = compute_gcd(a, b)
+    step(steps) // -1 is because we step(1) already to toggle the enable
+    expect(c.io.out.bits, expected_gcd)
+    expect(c.io.out.valid, 1)
+    step(1)
 
-    }
   }
 }

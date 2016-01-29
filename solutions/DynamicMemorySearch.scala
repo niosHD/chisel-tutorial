@@ -16,6 +16,7 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   val list   = Mem(n, UInt(width = w))
   val memVal = list(index)
   val over   = !io.en && ((memVal === io.data) || (index === UInt(n-1)))
+
   when (io.isWr) {
     list(io.wrAddr) := io.data
   } .elsewhen (io.en) {
@@ -35,6 +36,15 @@ class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester
 
   val list = Array.fill(c.n)(0)
   rnd.setSeed(0L)
+
+  // initialize memory
+  for(write_address <- 0 until n) {
+    poke(c.io.en, 0)
+    poke(c.io.isWr, 1)
+    poke(c.io.wrAddr, write_address)
+    poke(c.io.data, 0)
+    step(1)
+  }
 
   for (k <- 0 until 16) {
     // WRITE A WORD

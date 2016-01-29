@@ -18,19 +18,17 @@ class MaxNTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new MaxN(n, w))
   val c = device_under_test
 
-  testBlock {
-    val ins = Array.fill(c.n) {
-      0
+  val ins = Array.fill(c.n) {
+    0
+  }
+  for (i <- 0 until 10) {
+    var mx = 0
+    for (i <- 0 until c.n) {
+      ins(i) = rnd.nextInt(1 << c.w)
+      poke(c.io.ins(i), ins(i))
+      mx = if (ins(i) > mx) ins(i) else mx;
     }
-    for (i <- 0 until 10) {
-      var mx = 0
-      for (i <- 0 until c.n) {
-        ins(i) = rnd.nextInt(1 << c.w)
-        poke(c.io.ins(i), ins(i))
-        mx = if (ins(i) > mx) ins(i) else mx;
-      }
-      expect(c.io.out, mx)
-      step(1)
-    }
+    expect(c.io.out, mx)
+    step(1)
   }
 }

@@ -35,22 +35,20 @@ class MemoTests extends SteppedHWIOTester {
   val device_under_test = Module(new Memo)
   val c = device_under_test
 
-  testBlock {
-    def rd(addr: Int, data: Int) = {
-      poke(c.io.ren, 1)
-      poke(c.io.rdAddr, addr)
-      step(1)
-      expect(c.io.rdData, data)
-    }
-    def wr(addr: Int, data: Int) = {
-      poke(c.io.wen, 1)
-      poke(c.io.wrAddr, addr)
-      poke(c.io.wrData, data)
-      step(1)
-    }
-    wr(0, 1)
-    rd(0, 1)
-    wr(9, 11)
-    rd(9, 11)
+  def rd(addr: Int, data: Int) = {
+    poke(c.io.ren, 1)
+    poke(c.io.rdAddr, addr)
+    step(1)
+    expect(c.io.rdData, data)
   }
+  def wr(addr: Int, data: Int) = {
+    poke(c.io.wen, 1)
+    poke(c.io.wrAddr, addr)
+    poke(c.io.wrData, data)
+    step(1)
+  }
+  wr(0, 1)
+  rd(0, 1)
+  wr(9, 11)
+  rd(9, 11)
 }
