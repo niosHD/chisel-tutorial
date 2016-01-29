@@ -22,7 +22,8 @@ class Mul extends Module {
 }
 
 class MulTests extends SteppedHWIOTester {
-  val c = Module(new Mul)
+  val device_under_test = Module(new Mul)
+  val c = device_under_test
   val maxInt  = 1 << 4
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
@@ -32,5 +33,5 @@ class MulTests extends SteppedHWIOTester {
     expect(c.io.z, (x * y))
     step(1)
   }
-  install(c)
+
 }

@@ -14,7 +14,8 @@ class VecShiftRegisterSimple extends Module {
 }
 
 class VecShiftRegisterSimpleTests extends SteppedHWIOTester {
-  val c = Module(new VecShiftRegisterSimple)
+  val device_under_test = Module(new VecShiftRegisterSimple)
+  val c = device_under_test
   val reg = Array.fill(4){ 0 }
   for (t <- 0 until 16) {
     val in = rnd.nextInt(256)
@@ -25,5 +26,5 @@ class VecShiftRegisterSimpleTests extends SteppedHWIOTester {
     reg(0) = in
     expect(c.io.out, reg(3))
   }
-  install(c)
+
 }

@@ -15,7 +15,8 @@ class Mux2 extends Module {
 }
 
 class Mux2Tests extends SteppedHWIOTester {
-  val c = Module(new Mux2)
+  val device_under_test = Module(new Mux2)
+  val c = device_under_test
   val n = pow(2, 3).toInt
   for (s <- 0 until 2) {
     for (i0 <- 0 until 2) {
@@ -28,5 +29,5 @@ class Mux2Tests extends SteppedHWIOTester {
       }
     }
   }
-  install(c)
+
 }

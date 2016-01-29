@@ -15,7 +15,8 @@ class VecShiftRegister extends Module {
 }
 
 class VecShiftRegisterTests extends SteppedHWIOTester {
-  val c = Module(new VecShiftRegister)
+  val device_under_test = Module(new VecShiftRegister)
+  val c = device_under_test
   val reg     = Array.fill(4){ 0 }
   val ins     = Array.fill(4){ 0 }
   // Initialize the delays.
@@ -44,5 +45,5 @@ class VecShiftRegisterTests extends SteppedHWIOTester {
     }
     expect(c.io.out, reg(3))
   }
-  install(c)
+
 }

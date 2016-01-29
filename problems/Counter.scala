@@ -36,7 +36,8 @@ class Counter extends Module {
 }
 
 class CounterTest extends SteppedHWIOTester {
-  val c = Module(new Counter)
+  val device_under_test = Module(new Counter)
+  val c = device_under_test
   val maxInt  = 16
   var curCnt  = 0
 
@@ -57,6 +58,6 @@ class CounterTest extends SteppedHWIOTester {
     curCnt = if(inc) intWrapAround(curCnt + amt, 255) else curCnt
     expect(c.io.tot, curCnt)
   }
-  install(c)
+
 }
 

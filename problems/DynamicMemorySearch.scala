@@ -26,7 +26,8 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
 }
 
 class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester {
-  val c = Module(new DynamicMemorySearch(n, w))
+  val device_under_test = Module(new DynamicMemorySearch(n, w))
+  val c = device_under_test
   val list = Array.fill(c.n){ 0 }
   for (k <- 0 until 16) {
     // WRITE A WORD
@@ -56,5 +57,5 @@ class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester
     expect(c.io.target, expectedIndex)
     step(1)
   }
-  install(c)
+
 }

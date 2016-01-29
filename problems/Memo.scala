@@ -26,7 +26,8 @@ class Memo extends Module {
 }
 
 class MemoTests extends SteppedHWIOTester {
-  val c = Module(new Memo)
+  val device_under_test = Module(new Memo)
+  val c = device_under_test
   def rd(addr: Int, data: Int) = {
     poke(c.io.ren, 1)
     poke(c.io.rdAddr, addr)
@@ -43,5 +44,5 @@ class MemoTests extends SteppedHWIOTester {
   rd(0, 1)
   wr(9, 11)
   rd(9, 11)
-  install(c)
+
 }

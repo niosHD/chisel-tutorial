@@ -5,7 +5,7 @@ import Chisel.testers.UnitTestRunners
 import scala.collection.mutable.ArrayBuffer
 
 
-object Launcher extends UnitTestRunners {
+object Launcher {
   val list_of_tests = Map(
     "Accumulator"            -> (() => { new AccumulatorTests }),
     "LFSR16"                 -> (() => { new LFSR16Tests }),

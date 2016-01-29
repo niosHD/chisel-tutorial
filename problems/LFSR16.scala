@@ -13,7 +13,9 @@ class LFSR16 extends Module {
 }
 
 class LFSR16Tests extends SteppedHWIOTester {
-  val c = Module(new LFSR16)
+  val device_under_test = Module(new LFSR16)
+  val c = device_under_test
+
   var res = 1
   for (t <- 0 until 16) {
     val inc = rnd.nextInt(2)
@@ -25,5 +27,5 @@ class LFSR16Tests extends SteppedHWIOTester {
     }
     expect(c.io.out, res)
   }
-  install(c)
+
 }

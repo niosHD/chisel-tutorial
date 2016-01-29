@@ -14,7 +14,9 @@ class Accumulator extends Module {
 }
 
 class AccumulatorTests extends SteppedHWIOTester {
-  val c = Module(new Accumulator)
+  val device_under_test = Module(new Accumulator)
+  val c = device_under_test
+
   var tot = 0
   for (t <- 0 until 16) {
     val in = rnd.nextInt(2)
@@ -23,5 +25,4 @@ class AccumulatorTests extends SteppedHWIOTester {
     if (in == 1) tot += 1
     expect(c.io.out, tot)
   }
-  install(c)
 }
