@@ -17,8 +17,9 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests extends UnitTester {  
-  val c = Module(new VendingMachine)
+class VendingMachineTests extends SteppedHWIOTester {
+  val device_under_test = Module(new VendingMachine)
+  val c = device_under_test
   var money = 0
   var isValid = 0
   for (t <- 0 until 20) {
@@ -38,5 +39,5 @@ class VendingMachineTests extends UnitTester {
     // Compare
     expect(c.io.valid, isValid)
   }
-  install(c)
+
 }

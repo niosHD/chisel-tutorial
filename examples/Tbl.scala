@@ -12,14 +12,15 @@ class Tbl extends Module {
   io.out := r(io.addr)
 }
 
-class TblUnitTester extends UnitTester {
-  val c = Module(new Tbl)
+class TblUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new Tbl)
+  val c = device_under_test
+
   for (t <- 0 until 16) {
     val addr = rnd.nextInt(256)
     poke(c.io.addr, addr)
     expect(c.io.out, addr)
     step(1)
   }
-  install(c)
 }
 

@@ -1,11 +1,11 @@
 package problems
 
-import Chisel.testers.UnitTestRunners
+import Chisel.testers.{BasicTester, TesterDriver}
 
 import scala.collection.mutable.ArrayBuffer
 
 
-object Launcher extends UnitTestRunners {
+object Launcher {
   val list_of_tests = Map(
     "Accumulator"            -> (() => { new AccumulatorTests }),
     "LFSR16"                 -> (() => { new LFSR16Tests }),
@@ -50,7 +50,7 @@ object Launcher extends UnitTestRunners {
 
     for( arg <- to_call ) {
       if (list_of_tests.contains(arg)) {
-        if(!execute( list_of_tests(arg)() )) {
+        if(!TesterDriver.execute { list_of_tests(arg) } ) {
           failed_tests += arg
         }
       }

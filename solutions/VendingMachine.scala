@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class VendingMachine extends Module {
   val io = new Bundle {
@@ -33,26 +33,27 @@ class VendingMachine extends Module {
   io.valid := (state === sOk)
 }
 
-class VendingMachineTests extends UnitTester {  
-  val c = Module(new VendingMachine)
+class VendingMachineTests extends SteppedHWIOTester {
+  val device_under_test = Module(new VendingMachine)
+  val c = device_under_test
+
   var money = 0
   var isValid = 0
   for (t <- 0 until 20) {
-    val coin     = rnd.nextInt(3)*5
-    val isNickel = if(coin == 5) 1 else 0
-    val isDime   = if(coin == 10) 1 else 0
+    val coin = rnd.nextInt(3) * 5
+    val isNickel = if (coin == 5) 1 else 0
+    val isDime = if (coin == 10) 1 else 0
 
     // Advance circuit
     poke(c.io.nickel, isNickel)
-    poke(c.io.dime,   isDime)
+    poke(c.io.dime, isDime)
     step(1)
 
     // Advance model
     money = if (isValid == 1) 0 else (money + coin)
-    isValid = if(money >= 20) 1 else 0
+    isValid = if (money >= 20) 1 else 0
 
     // Compare
     expect(c.io.valid, isValid)
   }
-  install(c)
 }

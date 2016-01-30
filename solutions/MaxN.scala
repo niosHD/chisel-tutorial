@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class MaxN(val n: Int, val w: Int) extends Module {
 
@@ -14,9 +14,13 @@ class MaxN(val n: Int, val w: Int) extends Module {
   io.out := io.ins.reduceLeft(Max2)
 }
 
-class MaxNTests(val n: Int, val w: Int) extends UnitTester {
-  val c = Module(new MaxN(n, w))
-  val ins = Array.fill(c.n){ 0 }
+class MaxNTests(val n: Int, val w: Int) extends SteppedHWIOTester {
+  val device_under_test = Module(new MaxN(n, w))
+  val c = device_under_test
+
+  val ins = Array.fill(c.n) {
+    0
+  }
   for (i <- 0 until 10) {
     var mx = 0
     for (i <- 0 until c.n) {
@@ -27,5 +31,4 @@ class MaxNTests(val n: Int, val w: Int) extends UnitTester {
     expect(c.io.out, mx)
     step(1)
   }
-  install(c)
 }

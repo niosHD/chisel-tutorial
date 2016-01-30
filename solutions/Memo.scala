@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class Memo extends Module {
   val io = new Bundle {
@@ -31,16 +31,18 @@ class Memo extends Module {
 
 }
 
-class MemoTests extends UnitTester {
-  val c = Module(new Memo)
+class MemoTests extends SteppedHWIOTester {
+  val device_under_test = Module(new Memo)
+  val c = device_under_test
+
   def rd(addr: Int, data: Int) = {
     poke(c.io.ren, 1)
     poke(c.io.rdAddr, addr)
     step(1)
     expect(c.io.rdData, data)
   }
-  def wr(addr: Int, data: Int)  = {
-    poke(c.io.wen,    1)
+  def wr(addr: Int, data: Int) = {
+    poke(c.io.wen, 1)
     poke(c.io.wrAddr, addr)
     poke(c.io.wrData, data)
     step(1)
@@ -49,5 +51,4 @@ class MemoTests extends UnitTester {
   rd(0, 1)
   wr(9, 11)
   rd(9, 11)
-  install(c)
 }

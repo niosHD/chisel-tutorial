@@ -22,7 +22,6 @@ class FullAdder2 extends Module {
   io.cout := a_and_b | b_and_cin | a_and_cin
 }
 
-class FullAdder2UnitTester extends UnitTester {
-  val c = Module(new FullAdder2)
-  install(c)
+class FullAdder2UnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new FullAdder2)
 }

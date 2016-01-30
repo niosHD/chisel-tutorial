@@ -15,17 +15,21 @@ class ShiftRegister extends Module {
   io.out := r3
 }
 
-class ShiftRegisterUnitTester extends UnitTester {
-  val c = Module(new ShiftRegister)
-  val reg     = Array.fill(4){ 0 }
+class ShiftRegisterUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new ShiftRegister)
+
+  val c = device_under_test
+
+  val reg = Array.fill(4) {
+    0
+  }
   for (t <- 0 until 64) {
     val in = rnd.nextInt(2)
     poke(c.io.in, in)
     step(1)
     for (i <- 3 to 1 by -1)
-      reg(i) = reg(i-1)
+      reg(i) = reg(i - 1)
     reg(0) = in
     if (t >= 4) expect(c.io.out, reg(3))
   }
-  install(c)
 }

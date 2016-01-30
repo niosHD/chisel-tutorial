@@ -63,53 +63,53 @@ class Risc extends Module {
   }
 }
 
-class RiscUnitTester extends UnitTester {
+class RiscUnitTester extends SteppedHWIOTester {
   import Risc.Opcode._
 
-  val c = Module(new Risc)
-  def wr(addr: Int, data: Int)  = {
-    poke(c.io.isWr,   1)
+  val device_under_test = Module(new Risc)
+  val c = device_under_test
+
+  def wr(addr: Int, data: Int) = {
+    poke(c.io.isWr, 1)
     poke(c.io.wrAddr, addr)
     poke(c.io.wrData, data)
     step(1)
   }
-  def boot()  = {
+  def boot() = {
     poke(c.io.isWr, 0)
     poke(c.io.boot, 1)
     step(1)
   }
-  def tick()  = {
+  def tick() = {
     poke(c.io.isWr, 0)
     poke(c.io.boot, 0)
     step(1)
   }
-  val app  = Array(I(imm,   1, 0, 1), // r1 <- 1
-                   I(add,   1, 1, 1), // r1 <- r1 + r1
-                   I(add,   1, 1, 1), // r1 <- r1 + r1
-                   I(add, 255, 1, 0)) // rh <- r1
+  val app = Array(I(imm, 1, 0, 1), // r1 <- 1
+    I(add, 1, 1, 1), // r1 <- r1 + r1
+    I(add, 1, 1, 1), // r1 <- r1 + r1
+    I(add, 255, 1, 0)) // rh <- r1
   wr(0, 0) // skip reset
   for (addr <- app.indices)
     wr(addr, app(addr))
   boot()
 
-  for(instruction <- app) {
+  for (instruction <- app) {
     tick()
   }
   expect(c.io.valid, 1)
   expect(c.io.out, 4)
 
-//  var k = 0
-//  do {
-//    when(c.io.valid) {
-//      printf("io.valid, io.out %d\n", c.io.out)
-//      setDone := Bool(true)
-////      stop(0)
-//    } otherwise {
-//      tick(); k += 1
-//    }
-//  } while (/*peek(c.io.valid) === Bool(false) &&*/ k < 10)
-////  expect(k < 10, "TIME LIMIT")
-//  expect(c.io.out, 4)
-
-  install(c)
+  //  var k = 0
+  //  do {
+  //    when(c.io.valid) {
+  //      printf("io.valid, io.out %d\n", c.io.out)
+  //      setDone := Bool(true)
+  ////      stop(0)
+  //    } otherwise {
+  //      tick(); k += 1
+  //    }
+  //  } while (/*peek(c.io.valid) === Bool(false) &&*/ k < 10)
+  ////  expect(k < 10, "TIME LIMIT")
+  //  expect(c.io.out, 4)
 }

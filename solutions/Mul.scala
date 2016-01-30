@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 import scala.collection.mutable.ArrayBuffer
 
 /** Four-by-four multiply using a look-up table.
@@ -28,9 +28,11 @@ class Mul extends Module {
   // -------------------------------- \\
 }
 
-class MulTests extends UnitTester {
-  val c = Module(new Mul)
-  val maxInt  = 1 << 4
+class MulTests extends SteppedHWIOTester {
+  val device_under_test = Module(new Mul)
+  val c = device_under_test
+
+  val maxInt = 1 << 4
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
     val y = rnd.nextInt(maxInt)
@@ -39,5 +41,4 @@ class MulTests extends UnitTester {
     expect(c.io.z, (x * y))
     step(1)
   }
-  install(c)
 }

@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   val io = new Bundle {
@@ -16,6 +16,7 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   val list   = Mem(n, UInt(width = w))
   val memVal = list(index)
   val over   = !io.en && ((memVal === io.data) || (index === UInt(n-1)))
+
   when (io.isWr) {
     list(io.wrAddr) := io.data
   } .elsewhen (io.en) {
@@ -27,24 +28,39 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
   io.target := index
 }
 
-class DynamicMemorySearchTests(val n: Int, val w: Int) extends UnitTester {
-  val c = Module(new DynamicMemorySearch(n, w))
-  val list = Array.fill(c.n){ 0 }
+class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester {
+  val device_under_test = Module(new DynamicMemorySearch(n, w))
+  val c = device_under_test
+
+  enable_all_debug = true
+
+  val list = Array.fill(c.n)(0)
+  rnd.setSeed(0L)
+
+  // initialize memory
+  for(write_address <- 0 until n) {
+    poke(c.io.en, 0)
+    poke(c.io.isWr, 1)
+    poke(c.io.wrAddr, write_address)
+    poke(c.io.data, 0)
+    step(1)
+  }
+
   for (k <- 0 until 16) {
     // WRITE A WORD
-    poke(c.io.en,   0)
+    poke(c.io.en, 0)
     poke(c.io.isWr, 1)
-    val wrAddr = rnd.nextInt(c.n-1)
-    val data   = rnd.nextInt((1 << c.w) - 1) + 1 // can't be 0
+    val wrAddr = rnd.nextInt(c.n - 1)
+    val data = rnd.nextInt((1 << c.w) - 1) + 1 // can't be 0
     poke(c.io.wrAddr, wrAddr)
-    poke(c.io.data,   data)
+    poke(c.io.data, data)
     step(1)
     list(wrAddr) = data
     // SETUP SEARCH
     val target = if (k > 12) rnd.nextInt(1 << c.w) else data
     poke(c.io.isWr, 0)
     poke(c.io.data, target)
-    poke(c.io.en,   1)
+    poke(c.io.en, 1)
     step(1)
     poke(c.io.en, 0)
     step(1)
@@ -58,5 +74,4 @@ class DynamicMemorySearchTests(val n: Int, val w: Int) extends UnitTester {
     expect(c.io.target, expectedIndex)
     step(1)
   }
-  install(c)
 }

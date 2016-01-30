@@ -35,17 +35,19 @@ class Stack(val depth: Int) extends Module {
   io.dataOut := out
 }
 
-class StackUnitTester(val depth: Int) extends UnitTester {
-  val c = Module(new Stack(depth))
+class StackUnitTester(val depth: Int) extends SteppedHWIOTester {
+  val device_under_test = Module(new Stack(depth))
+  val c = device_under_test
+
   var nxtDataOut = 0
   var dataOut = 0
   val stack = new ScalaStack[Int]()
 
   for (t <- 0 until 16) {
-    val enable  = rnd.nextInt(2)
-    val push    = rnd.nextInt(2)
-    val pop     = rnd.nextInt(2)
-    val dataIn  = rnd.nextInt(256)
+    val enable = rnd.nextInt(2)
+    val push = rnd.nextInt(2)
+    val pop = rnd.nextInt(2)
+    val dataIn = rnd.nextInt(256)
 
     if (enable == 1) {
       dataOut = nxtDataOut
@@ -59,14 +61,12 @@ class StackUnitTester(val depth: Int) extends UnitTester {
       }
     }
 
-    poke(c.io.pop,    pop)
-    poke(c.io.push,   push)
-    poke(c.io.en,     enable)
+    poke(c.io.pop, pop)
+    poke(c.io.push, push)
+    poke(c.io.en, enable)
     poke(c.io.dataIn, dataIn)
     step(1)
     expect(c.io.dataOut, dataOut)
   }
-  install(c)
 }
-
 

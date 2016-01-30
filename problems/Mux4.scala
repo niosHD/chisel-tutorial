@@ -27,8 +27,9 @@ class Mux4 extends Module {
   m0.io.in1 := io.in1
 }
 
-class Mux4Tests extends UnitTester {  
-  val c = Module(new Mux4)
+class Mux4Tests extends SteppedHWIOTester {
+  val device_under_test = Module(new Mux4)
+  val c = device_under_test
   for (s0 <- 0 until 2) {
     for (s1 <- 0 until 2) {
       for(i0 <- 0 until 2) {
@@ -53,5 +54,5 @@ class Mux4Tests extends UnitTester {
       } 
     }
   }
-  install(c)
+
 }

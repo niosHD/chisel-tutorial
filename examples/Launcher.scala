@@ -1,16 +1,17 @@
 package examples
 
-import Chisel.testers.UnitTestRunners
+import Chisel.testers.{BasicTester, TesterDriver}
 
 import scala.collection.mutable.ArrayBuffer
 
-object Launcher extends UnitTestRunners{
+object Launcher {
   val list_of_tests = Map(
     "Adder"               -> (() => { new AdderUnitTester(8) }),
     "Adder4"              -> (() => { new Adder4UnitTester }),
+//    "Broken"              -> (() => { new BrokenUnitTester(8) }),
     "ByteSelector"        -> (() => { new ByteSelectorUnitTester }),
     "Combinational"       -> (() => { new CombinationalUnitTester }),
-    "DecoupledRouter"     -> (() => { new RouterDecoupledTester }),
+    "DecoupledRouter"     -> (() => { new DecoupledRouterUnitTester(20) }),
     "EnableShiftRegister" -> (() => { new EnableShiftRegisterUnitTester }),
     "FullAdder"           -> (() => { new FullAdderUnitTester }),
     "FullAdder2"          -> (() => { new FullAdder2UnitTester }),
@@ -55,7 +56,7 @@ object Launcher extends UnitTestRunners{
     val failed_tests = new ArrayBuffer[String]()
     for( arg <- to_call ) {
       if (list_of_tests.contains(arg)) {
-        if(!execute( list_of_tests(arg)() )) {
+        if(!TesterDriver.execute { list_of_tests(arg) }) {
           failed_tests += arg
         }
       }

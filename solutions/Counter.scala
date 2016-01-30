@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 import Counter._
 
 object Counter {
@@ -10,7 +10,7 @@ object Counter {
     Mux(n > max, UInt(0), n)
 
   // ---------------------------------------- \\
-  // Modify this function to increment by the
+  // increment by the
   // amt only when en is asserted
   // ---------------------------------------- \\
 
@@ -35,13 +35,15 @@ class Counter extends Module {
 
 }
 
-class CounterTest extends UnitTester {
-  val c = Module(new Counter)
+class CounterTest extends SteppedHWIOTester {
+  val device_under_test = Module(new Counter)
   val maxInt  = 16
   var curCnt  = 0
 
-  def intWrapAround(n: Int, max: Int) = 
-    if(n > max) 0 else n
+  val c = device_under_test
+
+  def intWrapAround(n: Int, max: Int) =
+    if (n > max) 0 else n
 
   // let it spin for a bit
   for (i <- 0 until 5) {
@@ -54,9 +56,8 @@ class CounterTest extends UnitTester {
     poke(c.io.inc, if (inc) 1 else 0)
     poke(c.io.amt, amt)
     step(1)
-    curCnt = if(inc) intWrapAround(curCnt + amt, 255) else curCnt
+    curCnt = if (inc) intWrapAround(curCnt + amt, 255) else curCnt
     expect(c.io.tot, curCnt)
   }
-  install(c)
 }
 

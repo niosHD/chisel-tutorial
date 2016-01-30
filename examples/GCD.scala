@@ -20,7 +20,7 @@ class GCD extends Module {
   io.v := y === UInt(0)
 }
 
-class GCDUnitTester extends UnitTester {
+class GCDUnitTester extends SteppedHWIOTester {
   def compute_gcd(a: Int, b: Int): (Int, Int) = {
     var x = a
     var y = b
@@ -38,7 +38,8 @@ class GCDUnitTester extends UnitTester {
   }
 
   val (a, b, z) = (64, 48, 16)
-  val gcd = Module(new GCD)
+  val device_under_test = Module(new GCD)
+  val gcd = device_under_test
 
   poke(gcd.io.a, a)
   poke(gcd.io.b, b)
@@ -48,9 +49,8 @@ class GCDUnitTester extends UnitTester {
 
   val (expected_gcd, steps) = compute_gcd(a, b)
 
-  step(steps-1) // -1 is because we step(1) already to toggle the enable
+  step(steps - 1) // -1 is because we step(1) already to toggle the enable
   expect(gcd.io.z, expected_gcd)
-  expect(gcd.io.v, 1 )
+  expect(gcd.io.v, 1)
 
-  install(gcd)
 }

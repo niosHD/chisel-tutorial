@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class Adder(val w: Int) extends Module {
   val io = new Bundle {
@@ -12,15 +12,16 @@ class Adder(val w: Int) extends Module {
   io.out := io.in0 + io.in1
 }
 
-class AdderTests(w: Int) extends UnitTester {
-  val c = Module(new Adder(w))
+class AdderTests(w: Int) extends SteppedHWIOTester {
+  val device_under_test = Module(new Adder(w))
+  val c = device_under_test
+
   for (i <- 0 until 10) {
     val in0 = rnd.nextInt(1 << c.w)
     val in1 = rnd.nextInt(1 << c.w)
     poke(c.io.in0, in0)
     poke(c.io.in1, in1)
-    expect(c.io.out, (in0 + in1)&((1 << c.w)-1))
+    expect(c.io.out, (in0 + in1) & ((1 << c.w) - 1))
     step(1)
   }
-  install(c)
 }

@@ -1,7 +1,7 @@
 package problems
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class VendingMachineSwitch extends Module {
   val io = new Bundle {
@@ -36,8 +36,9 @@ class VendingMachineSwitch extends Module {
   io.valid := (state ===s_ok)
 }
 
-class VendingMachineSwitchTests extends UnitTester {
-  val c = Module(new VendingMachineSwitch)
+class VendingMachineSwitchTests extends SteppedHWIOTester {
+  val device_under_test = Module(new VendingMachineSwitch)
+  val c = device_under_test
   var money = 0
   var isValid = 0
   for (t <- 0 until 20) {
@@ -57,5 +58,5 @@ class VendingMachineSwitchTests extends UnitTester {
     // Compare
     expect(c.io.valid, isValid)
   }
-  install(c)
+  
 }

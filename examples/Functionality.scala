@@ -14,8 +14,10 @@ class Functionality extends Module {
   io.z := clb(io.x, io.y, io.x, io.y)
 }
 
-class FunctionalityUnitTester extends UnitTester {
-  val c = Module(new Functionality)
+class FunctionalityUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new Functionality)
+  val c = device_under_test
+
   val maxInt = 1 << 16
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
@@ -25,5 +27,4 @@ class FunctionalityUnitTester extends UnitTester {
     expect(c.io.z, (x & y) | (~x & y))
     step(1)
   }
-  install(c)
 }

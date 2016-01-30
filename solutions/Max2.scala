@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.UnitTester
+import Chisel.testers.SteppedHWIOTester
 
 class Max2 extends Module {
   val io = new Bundle {
@@ -12,8 +12,10 @@ class Max2 extends Module {
   io.out := Mux(io.in0 > io.in1, io.in0, io.in1)
 }
 
-class Max2Tests extends UnitTester {
-  val c = Module(new Max2)
+class Max2Tests extends SteppedHWIOTester {
+  val device_under_test = Module(new Max2)
+  val c = device_under_test
+
   for (i <- 0 until 10) {
     // FILL THIS IN HERE
     val in0 = rnd.nextInt(256)
@@ -24,5 +26,4 @@ class Max2Tests extends UnitTester {
     expect(c.io.out, if (in0 > in1) in0 else in1)
     step(1)
   }
-  install(c)
 }

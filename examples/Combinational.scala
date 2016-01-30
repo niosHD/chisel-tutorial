@@ -12,17 +12,18 @@ class Combinational extends Module {
   io.z := io.x + io.y
 }
 
-class CombinationalUnitTester extends UnitTester {
-  val c = Module(new Combinational)
+class CombinationalUnitTester extends SteppedHWIOTester {
+  val device_under_test = Module(new Combinational)
+  val c = device_under_test
+
   val maxInt = 1 << 16
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)
     val y = rnd.nextInt(maxInt)
     poke(c.io.x, x)
     poke(c.io.y, y)
-    expect(c.io.z, (x + y)&(maxInt-1))
+    expect(c.io.z, (x + y) & (maxInt - 1))
     step(1)
   }
-  install(c)
 }
 

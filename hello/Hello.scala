@@ -10,17 +10,16 @@ class Hello extends Module {
   io.out := UInt(42)
 }
 
-class HelloTests extends UnitTester {
-  val c = Module(new Hello)
+class HelloTests extends SteppedHWIOTester {
+  val device_under_test = Module(new Hello)
+  val c = device_under_test
   step(1)
   expect(c.io.out, 42)
-  install(c)
 }
 
 object Hello {
   def main(mainArgs: Array[String]): Unit = {
     implicit val args = mainArgs.slice(1, mainArgs.length)
-    val tester = new UnitTester
-    tester.execute { new HelloTests }
+    TesterDriver.execute { () => new HelloTests }
   }
 }
