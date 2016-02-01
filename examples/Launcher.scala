@@ -8,7 +8,6 @@ object Launcher {
   val list_of_tests = Map(
     "Adder"               -> (() => { new AdderUnitTester(8) }),
     "Adder4"              -> (() => { new Adder4UnitTester }),
-//    "Broken"              -> (() => { new BrokenUnitTester(8) }),
     "ByteSelector"        -> (() => { new ByteSelectorUnitTester }),
     "Combinational"       -> (() => { new CombinationalUnitTester }),
     "DecoupledRouter"     -> (() => { new DecoupledRouterUnitTester(20) }),
