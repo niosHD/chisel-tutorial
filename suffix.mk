@@ -30,7 +30,7 @@ include $(top_srcdir)/objdirroot.mk
 
 objdir	?= $(objdirroot)/$(component)
 
-units := $(filter-out solutions problems examples Image Sound,\
+units := $(filter-out Launcher Image Sound Darken FIR,\
             $(notdir $(basename $(wildcard $(srcdir)/*.scala))))
 
 .PHONY:	$(units)

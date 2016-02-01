@@ -1,6 +1,6 @@
 package problems
 
-import Chisel.testers.{BasicTester, TesterDriver}
+import Chisel.testers.TesterDriver
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -50,9 +50,9 @@ object Launcher {
 
     for( arg <- to_call ) {
       if (list_of_tests.contains(arg)) {
-        if(!TesterDriver.execute { list_of_tests(arg) } ) {
-          failed_tests += arg
-        }
+//        if(!TesterDriver.execute { list_of_tests(arg) } ) {
+//          failed_tests += arg
+//        }
       }
       else {
         println(s"Error: $arg not found in list of tests")
