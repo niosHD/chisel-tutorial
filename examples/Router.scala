@@ -37,21 +37,6 @@ class Router extends Module {
   val io    = new RouterIO(n)
   val tbl   = Mem(depth, UInt(width = BigInt(n).bitLength))
 
-  io.read_routing_table_request.init
-  io.load_routing_table_request.init
-  io.read_routing_table_response.init
-  io.in.init
-  io.outs.foreach { out => out.init}
-
-  val ti = Reg(init=UInt(0, width = 16))
-  ti := ti + UInt(1)
-  printf("                    tbl: %d : %d : %d : %d",
-    tbl(0),
-    tbl(1),
-    tbl(2),
-    tbl(3)
-  )
-
   when(io.read_routing_table_request.valid && io.read_routing_table_response.ready) {
     val cmd = io.read_routing_table_request.deq()
     io.read_routing_table_response.enq(tbl(cmd.addr))
