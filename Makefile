@@ -10,14 +10,12 @@
 #  texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended \
 #  texlive-fonts-extra
 
-version   := 2.2.0
-
 PDFLATEX  := pdflatex
-WWW_PAGES := index.html community.html documentation.html download.html faq.html releases.html
-WWW_EXTRA := manual.html getting-started.html parameters.html
+WWW_PAGES :=
+WWW_EXTRA :=
 
 # The following subdirectories build documentation correctly.
-PDF_DIRS	:= installation manual tutorial getting-started talks/dac12 parameters cheatsheet
+PDF_DIRS	:= tutorial
 # Define a function to map PDF_DIRS to a PDF base name.
 # Basically, every directory is the base name of the pdf except for dac12-talk.
 pdf_base_name_from_dir = $(subst talks/dac12,dac12-talk,$(1))
@@ -37,14 +35,6 @@ MAN_PAGES := chisel.man
 srcDir    := .
 installTop:= ../www
 
-# Set the current release info
-# RELEASE_TAGTEXT is something like: v2.2.18 125 g3501d7f
-#  i.e., the output of git describe with dashes replaced by spaces
-RELEASE_TAGTEXT=$(subst -, ,$(shell git describe --tags release))
-RELEASE_TAG=$(firstword $(RELEASE_TAGTEXT))
-RELEASE_DATETEXT=$(shell git log -1 --format="%ai" $(RELEASE_TAG))
-RELEASE_DATE=$(firstword $(RELEASE_DATETEXT))
-
 vpath %.tex $(addprefix $(srcDir)/,$(PDF_DIRS))
 
 vpath %.mtt $(addprefix $(srcDir)/,$(PDF_DIRS))
@@ -58,10 +48,6 @@ html: $(WWW_PAGES)
 pdf: $(PDFS)
 
 install: all
-	install -d $(installTop)/$(version)/figs
-	install -m 664 $(foreach figdir,manual parameters tutorial,$(wildcard $(srcDir)/$(figdir)/figs/*.png)) $(installTop)/$(version)/figs
-	install -m 664 $(WWW_EXTRA) $(PDFS) $(installTop)/$(version)
-	install -m 664 $(WWW_PAGES) $(installTop)
 
 # NOTE: We follow the recommended practice of running the *latex tools twice
 # so references (citations and figures) are correctly handled.
@@ -95,23 +81,15 @@ chisel-%.pdf: %.tex %_date.sty
 %.html: $(srcDir)/templates/%.html $(srcDir)/templates/base.html
 	$(srcDir)/../bin/jinja2html.py $(notdir $<) $@
 
-releases.html:	$(srcDir)/templates/releases.html $(srcDir)/templates/base.html
-	sed -e "s/@VERSION@/$(RELEASE_TAG)/" -e "s/@DATE@/$(RELEASE_DATE)/" $< > $(dir $<)/$@.tmp
-	$(srcDir)/../bin/jinja2html.py $@.tmp $@ && ${RM} $(dir $<)/$@.tmp
-
 clean:
 	-rm -f $(TEX_TEMP_FILES)
 	-rm -f $(STY_TEMP_FILES)
 	# Remove any .png files that are created from pdfs
 	-rm -f $(subst .pdf,.png,$(wildcard parameters/figs/*.pdf))
-	-rm -f $(addprefix manual/figs/,bits-1.png bits-and.png bits-or-and.png node-hierarchy.png type-hierarchy.png)
 	-rm -f $(addprefix tutorial/figs/,DUT.png DUT.svg condupdates.png)
 	-rm -f $(WWW_PAGES) $(PDFS) $(WWW_EXTRA) $(addsuffix .1,$(WWW_EXTRA)) $(patsubst %.html,%.css,$(WWW_EXTRA))
 	-rm -f *~ *.aux *.log *.nav *.out *.snm *.toc *.vrb
 	-rm -f *.jpg *.png
-	-rm -f manual/chisel.man manual/chisel.ttex manual/*.aux manual/*.log manual/*.out manual/*.pdf
-	-rm -f bootcamp/figs/LFSR16.png
-	-rm -f getting-started/getting-started?.html getting-started?.html
 
 # Generate a date (optional) for the document based on the latest
 # git commit of any of its (obvious) constituent parts.
