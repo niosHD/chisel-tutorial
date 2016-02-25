@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.SteppedHWIOTester
+import Chisel.hwiotesters.SteppedHWIOTester
 
 class RealGCDInput extends Bundle {
   val a = Bits(width = 16)

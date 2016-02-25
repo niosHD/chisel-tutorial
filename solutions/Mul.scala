@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.SteppedHWIOTester
+import Chisel.hwiotesters.SteppedHWIOTester
 import scala.collection.mutable.ArrayBuffer
 
 /** Four-by-four multiply using a look-up table.

@@ -1,7 +1,7 @@
 package solutions
 
 import Chisel._
-import Chisel.testers.SteppedHWIOTester
+import Chisel.hwiotesters.SteppedHWIOTester
 
 class Accumulator extends Module {
   val io = new Bundle {
