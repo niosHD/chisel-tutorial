@@ -1,7 +1,7 @@
 package examples
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 
 class Parity extends Module {
   val io = new Bundle {

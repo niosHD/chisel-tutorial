@@ -1,7 +1,7 @@
 package examples
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 import scala.util.Random
 
 class Cell(isBorn: Boolean) extends Module {

@@ -3,7 +3,7 @@ package examples
 // See LICENSE for license details.
 
 import Chisel._
-import Chisel.testers.OrderedDecoupledHWIOTester
+import Chisel.hwiotesters.OrderedDecoupledHWIOTester
 
 class SmallOdds(filter_width: Int) extends Module {
 

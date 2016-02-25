@@ -26,7 +26,7 @@ object Launcher {
     "Router"              -> (() => { new RouterUnitTester }),
     "ShiftRegister"       -> (() => { new ShiftRegisterUnitTester }),
     "SimpleALU"           -> (() => { new SimpleALUUnitTester }),
-    "SmallOdds"           -> (() => { new SmallOdds3Tester(16) }),
+    "SmallOdds"           -> (() => { new SmallOddsTester(16) }),
     "Stack"               -> (() => { new StackUnitTester(8) }),
     "Tbl"                 -> (() => { new TblUnitTester }),
     "VecSearch"           -> (() => { new VecSearchUnitTester })

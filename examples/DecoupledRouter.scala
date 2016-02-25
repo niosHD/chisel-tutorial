@@ -1,7 +1,7 @@
 package examples
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 
 object DecoupledRouter {
   val addressWidth    = 32
@@ -55,11 +55,11 @@ class DecoupledRouter extends Module {
     }
   }
 
-  io.read_routing_table_request.init()
-  io.load_routing_table_request.init()
-  io.read_routing_table_response.init()
-  io.in.init()
-  io.outs.foreach { out => out.init() }
+//  io.read_routing_table_request.init()
+//  io.load_routing_table_request.init()
+//  io.read_routing_table_requestng_table_response.init()
+  //TODO: put this back in -- io.in.init()
+//  io.outs.foreach { out => out.init() }
 
   when(io.read_routing_table_request.valid && io.read_routing_table_response.ready) {
     io.read_routing_table_response.enq(tbl(

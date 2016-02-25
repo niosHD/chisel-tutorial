@@ -1,7 +1,7 @@
 package examples
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 
 object MemorySearchTestData {
   val element_list = Array(0, 4, 15,14, 2, 5, 13)
