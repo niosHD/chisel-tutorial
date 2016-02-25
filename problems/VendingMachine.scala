@@ -1,7 +1,7 @@
 package problems
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 
 class VendingMachine extends Module {
   val io = new Bundle {

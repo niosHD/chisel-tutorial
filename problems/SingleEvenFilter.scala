@@ -1,7 +1,7 @@
 package problems
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 
 abstract class Filter[T <: Data](dtype: T) extends Module {
   val io = new Bundle {

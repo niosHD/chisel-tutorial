@@ -1,7 +1,7 @@
 package problems
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 import scala.collection.mutable.ArrayBuffer
 
 class Mul extends Module {

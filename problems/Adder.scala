@@ -1,7 +1,7 @@
 package problems
 
 import Chisel._
-import Chisel.testers._
+import Chisel.hwiotesters._
 
 class Adder(val w: Int) extends Module {
   // fill in here
