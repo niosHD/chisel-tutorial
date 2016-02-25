@@ -14,8 +14,11 @@
 /solutions/project/target/
 /solutions/target/
 /generated*/
-
 .idea/
 chisel-tutorial.iml
 examples/Adder.out
 target/
+doc/*.log
+doc/*.aux
+doc/chisel-tutorial.pdf
+*.graffle
