@@ -5,9 +5,7 @@ package examples
 import Chisel._
 import Chisel.testers.OrderedDecoupledHWIOTester
 
-import scala.util.Random
-
-class SmallOdds3(filter_width: Int) extends Module {
+class SmallOdds(filter_width: Int) extends Module {
 
   class FilterIO extends Bundle {
     val in = new DeqIO(UInt(width = filter_width))
@@ -51,8 +49,8 @@ class SmallOdds3(filter_width: Int) extends Module {
   buildFilter()
 }
 
-class SmallOdds3Tester(width: Int) extends OrderedDecoupledHWIOTester {
-  val device_under_test = Module(new SmallOdds3(filter_width = width))
+class SmallOddsTester(width: Int) extends OrderedDecoupledHWIOTester {
+  val device_under_test = Module(new SmallOdds(filter_width = width))
 
   rnd.setSeed(0L)
   for (i <- 0 to 100) {
