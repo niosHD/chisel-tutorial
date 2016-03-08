@@ -41,6 +41,7 @@ class CounterTest extends SteppedHWIOTester {
   var curCnt  = 0
 
   val c = device_under_test
+  enable_all_debug = true
 
   def intWrapAround(n: Int, max: Int) =
     if (n > max) 0 else n

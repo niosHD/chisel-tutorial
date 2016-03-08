@@ -28,6 +28,7 @@ class DynamicMemorySearch(val n: Int, val w: Int) extends Module {
 class DynamicMemorySearchTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new DynamicMemorySearch(n, w))
   val c = device_under_test
+  enable_all_debug = true
 
   val list = Array.fill(c.n)(0)
   rnd.setSeed(0L)

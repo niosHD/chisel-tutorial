@@ -39,6 +39,7 @@ class VendingMachineSwitch extends Module {
 class VendingMachineSwitchTests extends SteppedHWIOTester {
   val device_under_test = Module(new VendingMachineSwitch)
   val c = device_under_test
+  enable_all_debug = true
 
   var money = 0
   var isValid = 0

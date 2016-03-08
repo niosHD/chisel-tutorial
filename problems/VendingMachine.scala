@@ -20,6 +20,8 @@ class VendingMachine extends Module {
 class VendingMachineTests extends SteppedHWIOTester {
   val device_under_test = Module(new VendingMachine)
   val c = device_under_test
+  enable_all_debug = true
+
   var money = 0
   var isValid = 0
   for (t <- 0 until 20) {

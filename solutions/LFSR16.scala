@@ -19,6 +19,7 @@ class LFSR16 extends Module {
 class LFSR16Tests extends SteppedHWIOTester {
   val device_under_test = Module(new LFSR16)
   val c = device_under_test
+  enable_all_debug = true
 
   var res = 1
   for (t <- 0 until 16) {

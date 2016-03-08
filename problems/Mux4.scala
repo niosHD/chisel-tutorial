@@ -30,6 +30,8 @@ class Mux4 extends Module {
 class Mux4Tests extends SteppedHWIOTester {
   val device_under_test = Module(new Mux4)
   val c = device_under_test
+  enable_all_debug = true
+
   for (s0 <- 0 until 2) {
     for (s1 <- 0 until 2) {
       for(i0 <- 0 until 2) {

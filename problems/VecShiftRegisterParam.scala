@@ -15,6 +15,8 @@ class VecShiftRegisterParam(val n: Int, val w: Int) extends Module {
 class VecShiftRegisterParamTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new VecShiftRegisterParam(n, w))
   val c = device_under_test
+  enable_all_debug = true
+
   val reg = Array.fill(c.n){ 0 }
   for (t <- 0 until 16) {
     val in = rnd.nextInt(1 << c.w)

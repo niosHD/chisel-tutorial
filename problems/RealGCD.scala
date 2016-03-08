@@ -37,6 +37,8 @@ class RealGCDTests extends SteppedHWIOTester {
 
   val device_under_test = Module(new RealGCD)
   val c = device_under_test
+  enable_all_debug = true
+
   val inputs = List( (48, 32), (7, 3), (100, 10) )
 
   for ( (a, b) <- inputs) {

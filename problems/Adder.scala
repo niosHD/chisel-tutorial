@@ -16,6 +16,8 @@ class Adder(val w: Int) extends Module {
 class AdderTests(w: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new Adder(w))
   val c = device_under_test
+  enable_all_debug = true
+
   for (i <- 0 until 10) {
     val in0 = rnd.nextInt(1 << c.w)
     val in1 = rnd.nextInt(1 << c.w)
