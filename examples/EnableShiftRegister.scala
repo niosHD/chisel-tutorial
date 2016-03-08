@@ -30,10 +30,12 @@ class EnableShiftRegister extends Module {
 class EnableShiftRegisterUnitTester extends SteppedHWIOTester {
   val device_under_test = Module(new EnableShiftRegister)
   val c = device_under_test
+  enable_all_debug = true
 
   val reg = Array.fill(4) {
     0
   }
+  step(1) // give reset time to clear
   for (t <- 0 until 16) {
     val in = rnd.nextInt(16)
     val shift = rnd.nextInt(2)

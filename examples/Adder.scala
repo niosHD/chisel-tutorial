@@ -35,6 +35,7 @@ class Adder(val n:Int) extends Module {
 class AdderUnitTester(nBits: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new Adder(nBits))
   val c = device_under_test
+  enable_all_debug = true
 
   for (t <- 0 until 4) {
     val rnd0 = rnd.nextInt(c.n)

@@ -51,13 +51,14 @@ To generate a waveform (`Hello.vcd`) of the testcase execution:
     $ sbt "run Hello --backend c --compile --test --genHarness --vcd"
 
 To generate Verilog instead of a C emulator:
+    $ sbt "run Hello --backend c --compile --test --genHarness --vcd"
 
+To
     $ sbt "run Hello --backend v --genHarness"
 
 
 Completing the Tutorials
 ------------------------
-`If you are using Chisel2, please read the documentaion in README-CHISEL2.md`
 
 To learn Chisel, we recommend learning by example and just trying things out.
 To help with this, we have produced exercises (`/problems`) which have clearly
@@ -72,44 +73,37 @@ To speed things up, we will keep sbt running. To get started:
 #### Mux2
 This should already work. Try
 
-    > run Mux2
+    > run Mux2 --backend c --targetDir ../emulator --compile --test --genHarness
 
 #### Mux4
 You can instantiate a module with `val foo = Module(new Bar())`
 
-    > run Mux4
+    > run Mux4 --backend c --targetDir ../emulator --compile --test --genHarness
 
 #### Counter
 You can conditionally update a value without a mux by using `when (cond) { foo := bar }`
 
-    > run Counter
+    > run Counter --backend c --targetDir ../emulator --compile --test --genHarness
 
 #### Vending Machine
 
-    > run VendingMachine
+    > run VendingMachine --backend c --targetDir ../emulator --compile --test --genHarness`
 
 #### Memo
 The type of memory that's inferred is based on how you handle the read and
 write enables. This is pretty much the same as how Xilinx and Altera infer
 memories.
 
-    > run Memo
+    > run Memo --backend c --targetDir ../emulator --compile --test --genHarness
 
 #### Mul
 
-    > run Mul
+    > run Mul --backend c --targetDir ../emulator --compile --test --genHarness
 
 #### RealGCD
 
-    > run RealGCD
+    > run RealGCD --backend c --targetDir ../emulator --compile --test --genHarness
 
-How these tutorials work
-------------------------
-Each of the directories `(problems, solutions and examples)` is an independent
-sbt module with it's own `build.sbt` configuration file and `Launcher.scala` which contains
-the only main() in any of the scala files.  `sbt` looks for a main defined anywhere in the directory.
-If there is only one it runs it.  Which is how Launcher is used.  If you create another main sbt
-will offer a menu asking which main to run.  This will complicate the above examples.
 
 
 Learning More Chisel
