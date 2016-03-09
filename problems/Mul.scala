@@ -24,6 +24,8 @@ class Mul extends Module {
 class MulTests extends SteppedHWIOTester {
   val device_under_test = Module(new Mul)
   val c = device_under_test
+  enable_all_debug = true
+
   val maxInt  = 1 << 4
   for (i <- 0 until 10) {
     val x = rnd.nextInt(maxInt)

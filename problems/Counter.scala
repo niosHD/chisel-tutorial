@@ -38,6 +38,8 @@ class Counter extends Module {
 class CounterTest extends SteppedHWIOTester {
   val device_under_test = Module(new Counter)
   val c = device_under_test
+  enable_all_debug = true
+
   val maxInt  = 16
   var curCnt  = 0
 

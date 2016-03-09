@@ -59,6 +59,9 @@ object Launcher {
         if(!TesterDriver.execute { list_of_tests(arg) }) {
           failed_tests += arg
         }
+        else {
+          println(s"PASSED -- $arg")
+        }
       }
       else {
         println(s"Error: $arg not found in list of tests")

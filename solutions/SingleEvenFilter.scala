@@ -35,6 +35,7 @@ class SingleEvenFilter[T <: UInt](dtype: T) extends Filter(dtype) {
 class SingleEvenFilterTests(w: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new SingleEvenFilter(UInt(width = w)))
   val c = device_under_test
+  enable_all_debug = true
 
   val maxInt = 1 << w
   for (i <- 0 until 10) {

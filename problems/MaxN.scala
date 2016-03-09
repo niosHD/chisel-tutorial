@@ -17,6 +17,8 @@ class MaxN(val n: Int, val w: Int) extends Module {
 class MaxNTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val device_under_test = Module(new MaxN(n, w))
   val c = device_under_test
+  enable_all_debug = true
+
   val ins = Array.fill(c.n){ 0 }
   for (i <- 0 until 10) {
     var mx = 0

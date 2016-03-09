@@ -15,6 +15,8 @@ class Max2 extends Module {
 class Max2Tests extends SteppedHWIOTester {
   val device_under_test = Module(new Max2)
   val c = device_under_test
+  enable_all_debug = true
+
   for (i <- 0 until 10) {
     // FILL THIS IN HERE
     poke(c.io.in0, 0)

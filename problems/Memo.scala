@@ -28,6 +28,8 @@ class Memo extends Module {
 class MemoTests extends SteppedHWIOTester {
   val device_under_test = Module(new Memo)
   val c = device_under_test
+  enable_all_debug = true
+
   def rd(addr: Int, data: Int) = {
     poke(c.io.ren, 1)
     poke(c.io.rdAddr, addr)

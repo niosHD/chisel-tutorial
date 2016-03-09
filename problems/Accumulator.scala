@@ -16,6 +16,7 @@ class Accumulator extends Module {
 class AccumulatorTests extends SteppedHWIOTester {
   val device_under_test = Module(new Accumulator)
   val c = device_under_test
+  enable_all_debug = true
 
   var tot = 0
   for (t <- 0 until 16) {
