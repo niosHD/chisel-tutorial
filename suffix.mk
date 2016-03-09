@@ -1,10 +1,6 @@
 SBT          ?= sbt
 SBT_FLAGS    ?= -Dsbt.log.noformat=true
 
-# Don't use any built-in rules.
-MAKEFLAGS += --no-builtin-rules
-.SUFFIXES:
-
 # If a chiselVersion is defined, use that.
 # Otherwise, use the latest release.
 ifneq (,$(chiselVersion))
@@ -108,4 +104,3 @@ Makefile : ;
 # If we don't have an output directory, here is the rule to make it.
 $(objdir):
 	mkdir -p $@
-	if [ "$(incdir)" ] ;  then cp -p $(addprefix $(incdir)/,$(emulator_includes)) $@ ; fi
