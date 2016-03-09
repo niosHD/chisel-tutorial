@@ -49,7 +49,7 @@ default: all
 
 all: outs verilog # dreamer
 
-check: $(objdir)/test-solutions.xml
+check: $(objdir) $(objdir)/test-solutions.xml
 
 clean: $(filter-out $(wildcard $objdir),$(objdir)) $(objdir)
 	cd $(objdir) && $(RM) $(generated_files)
@@ -72,6 +72,9 @@ ifeq (3.0,$(chiselVersion))
 # Chisel3 directory
 include $(top_srcdir)/chisel3/rules.mk
 else
+$(objdir)/%.dot: %.scala
+	set -e -o pipefail; "$(SBT)" $(SBT_FLAGS) "run $(notdir $(basename $<)) --backend dot --targetDir $(objdir) $(CHISEL_FLAGS)"
+
 $(objdir)/%.out: %.scala
 	set -e -o pipefail; "$(SBT)" $(SBT_FLAGS) "run $(notdir $(basename $<)) --genHarness --compile --test --backend c --vcd --targetDir $(objdir) $(CHISEL_FLAGS)" | tee $@
 
