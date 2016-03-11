@@ -1,6 +1,9 @@
 SBT          ?= sbt
 SBT_FLAGS    ?= -Dsbt.log.noformat=true
 
+# Cancel the default %.out rule
+%.out : %
+
 # If a chiselVersion is defined, use that.
 # Otherwise, use the latest release.
 ifneq (,$(chiselVersion))
@@ -63,6 +66,10 @@ verilog: $(addsuffix .v, $(executables))
 
 $(objdir)/test-solutions.xml: $(tut_outs)
 	$(top_srcdir)/sbt/check $(tut_outs) > $@
+
+# Provide a dummy rule that effectively substitutes the objdir for the srcdir
+%.out : $(objdir)/%.out
+	@true
 
 # We need to set the shell options -e -o pipefail here or the exit
 # code will be the exit code of the last element of the pipeline - the tee.
