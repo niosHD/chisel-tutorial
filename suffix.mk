@@ -16,6 +16,10 @@ endif
 top_srcdir  ?= ..
 srcdir      ?= .
 
+# Derive the scala class from the output we're generating,
+#  or the source file we found.
+scalasrcclass = $(notdir $(basename $(1)))
+
 include $(top_srcdir)/objdirroot.mk
 
 # Determine where we are
@@ -29,8 +33,11 @@ include $(top_srcdir)/objdirroot.mk
 
 objdir	?= $(objdirroot)/$(component)
 
+# A dependency on the output directory, but only if it doesn't exist.
+outputdir   := $(filter-out $(wildcard $objdir),$(objdir))
+
 units := $(filter-out Launcher Image Sound Darken FIR,\
-            $(notdir $(basename $(wildcard $(srcdir)/*.scala))))
+            $(call scalasrcclass,$(wildcard $(srcdir)/*.scala)))
 
 .PHONY:	$(units)
 
@@ -52,9 +59,9 @@ default: all
 
 all: outs verilog # dreamer
 
-check: $(objdir) $(objdir)/test-solutions.xml
+check: $(outputdir) $(objdir)/test-solutions.xml
 
-clean: $(filter-out $(wildcard $objdir),$(objdir)) $(objdir)
+clean: $(outputdir)
 	cd $(objdir) && $(RM) $(generated_files)
 	$(RM) -r project/target/ target/
 
@@ -79,17 +86,17 @@ ifeq (3.0,$(chiselVersion))
 # Chisel3 directory
 include $(top_srcdir)/chisel3/rules.mk
 else
-$(objdir)/%.dot: %.scala
-	set -e -o pipefail; "$(SBT)" $(SBT_FLAGS) "run $(notdir $(basename $<)) --backend dot --targetDir $(objdir) $(CHISEL_FLAGS)"
+$(objdir)/%.dot: $(outputdir) %.scala
+	set -e -o pipefail; "$(SBT)" $(SBT_FLAGS) "run $(call scalasrcclass,$@) --backend dot --targetDir $(objdir) $(CHISEL_FLAGS)"
 
-$(objdir)/%.out: %.scala
-	set -e -o pipefail; "$(SBT)" $(SBT_FLAGS) "run $(notdir $(basename $<)) --genHarness --compile --test --backend c --vcd --targetDir $(objdir) $(CHISEL_FLAGS)" | tee $@
+$(objdir)/%.out: $(outputdir) %.scala
+	set -e -o pipefail; "$(SBT)" $(SBT_FLAGS) "run $(call scalasrcclass,$@) --genHarness --compile --test --backend c --vcd --targetDir $(objdir) $(CHISEL_FLAGS)" | tee $@
 
-$(objdir)/%.hex: %.scala
-	"$(SBT)" $(SBT_FLAGS) "run $(notdir $(basename $<)) --backend flo --genHarness --compile --test --targetDir $(objdir) $(CHISEL_FLAGS)"
+$(objdir)/%.hex: $(outputdir) %.scala
+	"$(SBT)" $(SBT_FLAGS) "run $(call scalasrcclass,$@) --backend flo --genHarness --compile --test --targetDir $(objdir) $(CHISEL_FLAGS)"
 
-$(objdir)/%.v: %.scala
-	"$(SBT)" $(SBT_FLAGS) "run $(notdir $(basename $<)) --genHarness --backend v --targetDir $(objdir) $(CHISEL_FLAGS)"
+$(objdir)/%.v: $(outputdir) %.scala
+	"$(SBT)" $(SBT_FLAGS) "run $(call scalasrcclass,$@) --genHarness --backend v --targetDir $(objdir) $(CHISEL_FLAGS)"
 endif
 
 compile smoke:
