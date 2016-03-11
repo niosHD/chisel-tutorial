@@ -21,6 +21,9 @@ class HelloTests extends SteppedHWIOTester {
 object Hello {
   def main(mainArgs: Array[String]): Unit = {
     implicit val args = mainArgs.slice(1, mainArgs.length)
-    TesterDriver.execute { () => new HelloTests }
+    if (TesterDriver.execute { () => new HelloTests }) {
+      // The following is to keep our regression tester happy.
+      println(s"PASSED -- ${mainArgs(0)}")
+    }
   }
 }
