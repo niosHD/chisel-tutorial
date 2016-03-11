@@ -22,3 +22,7 @@ doc/*.log
 doc/*.aux
 doc/chisel-tutorial.pdf
 *.graffle
+/eclipse.bin
+.classpath
+.project
+.settings
