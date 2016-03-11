@@ -50,8 +50,15 @@ class DecoupledRouter extends Module {
   val tbl   = Mem(depth, UInt(width = BigInt(n).bitLength))
 
   when(reset) {
+    io.in.ready := Bool(false)
+    io.read_routing_table_request.ready := Bool(false)
+    io.load_routing_table_request.ready := Bool(false)
+    io.read_routing_table_response.valid := Bool(false)
     tbl.indices.foreach { index =>
       tbl(index) := UInt(0, width = DecoupledRouter.addressWidth)
+    }
+    for (i <- 0 until n) {
+      io.outs(i).valid := Bool(false)
     }
   }
 
@@ -110,6 +117,12 @@ class DecoupledRouterUnitTester(number_of_packets_to_send: Int) extends OrderedD
     inputEvent(c.io.in.bits.header -> header, c.io.in.bits.body -> body)
     outputEvent(c.io.outs(routed_to).bits.body -> body)
     logScalaDebug(s"rout_packet $header $body should go to out($routed_to)")
+  }
+
+  when(reset) {
+    c.io.read_routing_table_request.valid := Bool(false)
+    c.io.read_routing_table_response.ready := Bool(false)
+    c.io.load_routing_table_request.valid := Bool(false)
   }
 
   readRoutingTable(0, 0) // confirm we initialized the routing table
