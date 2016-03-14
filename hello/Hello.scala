@@ -5,10 +5,11 @@ import Chisel.testers._
 import Chisel.hwiotesters._
 
 class Hello extends Module {
-  val io = new Bundle { 
+  val io = new Bundle {
     val out = UInt(OUTPUT, 8)
   }
   io.out := UInt(42)
+  printf("Hello, world\n")
 }
 
 class HelloTests extends SteppedHWIOTester {
