@@ -19,9 +19,7 @@ class MaxNTests(val n: Int, val w: Int) extends SteppedHWIOTester {
   val c = device_under_test
   enable_all_debug = true
 
-  val ins = Array.fill(c.n) {
-    0
-  }
+  val ins = Array.fill(c.n){ 0 }
   for (i <- 0 until 10) {
     var mx = 0
     for (i <- 0 until c.n) {

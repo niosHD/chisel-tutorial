@@ -1,7 +1,7 @@
 package problems
 
-import Chisel._ 
-import Chisel.hwiotesters._
+import Chisel._
+import Chisel.hwiotesters.SteppedHWIOTester
 
 class MaxN(val n: Int, val w: Int) extends Module {
 
@@ -27,8 +27,7 @@ class MaxNTests(val n: Int, val w: Int) extends SteppedHWIOTester {
       poke(c.io.ins(0), 0)
     }
     // FILL THIS IN HERE
-    expect(c.io.out, 1)
+    expect(c.io.out, mx)
     step(1)
   }
-
 }
