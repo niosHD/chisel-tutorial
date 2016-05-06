@@ -73,7 +73,7 @@
 %  %\vspace*{-0.1in}
 %  }
 
-\title{Chisel 2.2 Tutorial}
+\title{Chisel 3.0 Tutorial}
 \author{Jonathan Bachrach, Krste Asanovi\'{c}, John Wawrzynek \\
 EECS Department, UC Berkeley\\
 {\tt  \{jrb|krste|johnw\}@eecs.berkeley.edu}
@@ -540,7 +540,7 @@ Vecs create an indexable vector of elements, and are constructed as
 follows:
 \begin{scala}
 // Vector of 5 23-bit signed integers.
-val myVec = Vec.fill(5){ SInt(width = 23) } 
+val myVec = Vec(5, SInt(width = 23))
 
 // Connect to one element of vector. 
 val reg3  = myVec(3) 
@@ -562,7 +562,7 @@ structures:
 \begin{scala}
 class BigBundle extends Bundle {
  // Vector of 5 23-bit signed integers.
- val myVec = Vec.fill(5) { SInt(width = 23) } 
+ val myVec = Vec(5, SInt(width = 23))
  val flag  = Bool()
  // Previously defined bundle.
  val f     = new MyFloat()              
@@ -714,7 +714,7 @@ the Scala \code{new} keyword to create a
 new object.  We then wire them up to one another and to the ports of
 the \code{Mux4} interface.
 
-\section{Running and Testing Examples}
+\section{Running Examples}
 
 Now that we have defined modules, we will discuss how we actually run and test a circuit.  Chisel translates into either \verb@C++@ or Verilog.   In order to build a circuit we need to call \code{chiselMain}:
 
@@ -1296,25 +1296,12 @@ does not support combinational (asynchronous) reads (anymore). The read address
 needs to be registered.}
 
 
-\begin{scala}
-object Mem {
-  def apply[T <: Data](type: T, depth: Int, 
-          seqRead: Boolean = false): Mem
-}
-
-class Mem[T <: Data](type: T, depth: Int,
-      seqRead: Boolean = false)
-    extends Updateable {
-  def apply(idx: UInt): T
-}
-\end{scala}
-
 Ports into Mems are created by applying a \code{UInt} index.  A 32-entry
 register file with one write port and two combinational read ports might be
 expressed as follows:
 
 \begin{scala}
-val rf = Mem(UInt(width = 64), 32)
+val rf = Mem(32, UInt(width = 64))
 when (wen) { rf(waddr) := wdata }
 val dout1 = rf(waddr1)
 val dout2 = rf(waddr2)
@@ -1326,7 +1313,7 @@ one-write port SRAM might be described as follows:
 
 \begin{scala}
 val ram1r1w =
-  Mem(UInt(width = 32), 1024, seqRead = true)
+  Mem(1024, UInt(width = 32))
 val reg_raddr = Reg(UInt())
 when (wen) { ram1r1w(waddr) := wdata }
 when (ren) { reg_raddr := raddr }
@@ -1337,8 +1324,7 @@ Single-ported SRAMs can be inferred when the read and write conditions are
 mutually exclusive in the same \code{when} chain:
 
 \begin{scala}
-val ram1p = 
-  Mem(UInt(width = 32), 1024, seqRead = true)
+val ram1p = Mem(1024, UInt(width = 32))
 val reg_raddr = Reg(UInt())
 when (wen) { ram1p(waddr) := wdata }
 .elsewhen (ren) { reg_raddr := raddr }
@@ -1353,7 +1339,7 @@ undefined.
 the corresponding mask bit is set.
 
 \begin{scala}
-val ram = Mem(UInt(width = 32), 256)
+val ram = Mem(256, UInt(width = 32))
 when (wen) { ram.write(waddr, wdata, wmask) }
 \end{scala}
 
@@ -1375,7 +1361,7 @@ when (wen) { ram.write(waddr, wdata, wmask) }
 % The device records while \verb+button+ is \verb+true+, or plays back when \verb+false+.
 
 
-\section{Interfaces and Bulk Connections}
+\section{Interfaces \& Bulk Connections}
 \label{sec:interfaces}
 
 For more sophisticated modules it is often useful to define and
@@ -1388,7 +1374,7 @@ users can make changes in large interfaces in one place reducing the
 number of updates required when adding or removing pieces of the
 interface.
 
-\subsection{Port Classes, Subclasses, and Nesting}
+\subsection{Ports: Subclasses  \& Nesting}
 
 As we saw earlier, users can define their own interfaces by defining a class that subclasses \verb+Bundle+.  
 For example, a user could define a simple link for handshaking data as follows:
@@ -1447,17 +1433,17 @@ we utilize the \verb+Vec+ constructor:
 
 \begin{scala}
 class CrossbarIo(n: Int) extends Bundle {
-  val in  = Vec.fill(n){ new PLink().flip() }
+  val in  = Vec(n, new PLink().flip())
   val sel = UInt(INPUT, sizeof(n))
-  val out = Vec.fill(n){ new PLink() }
+  val out = Vec(n, new PLink())
 }
 \end{scala}
 
 % \begin{scala}
 % class CrossbarIo(n: Int) extends Bundle {
-%   val in  = Vec.fill(n){ UInt(w, INPUT) }
-%   val sel = Vec.fill(n){ UInt(sizeof(n),  INPUT) }
-%   val out = Vec.fill(n){ UInt(w, OUTPUT) }
+%   val in  = Vec(n, UInt(w, INPUT))
+%   val sel = Vec(n, UInt(sizeof(n),  INPUT))
+%   val out = Vec(n, UInt(w, OUTPUT))
 % }
 % \end{scala}
 
@@ -1595,7 +1581,7 @@ completely connect up the CPU interface.
 % Module correspond to Verilog modules
 % Cell is a sub-module, Chisel Module
 
-\section{Functional Creation of Modules}
+\section{Functional Module Creation}
 \label{sec:funconstructor}
 
 It is also useful to be able to make a functional interface for
@@ -1640,7 +1626,7 @@ class Mux4 extends Module {
 
 Selecting inputs is so useful that Chisel builds it in and calls it
 \code{Mux}.  However, unlike \code{Mux2} defined above, the builtin version allows any datatype on
-\code{in0} and \code{in1} as long as they have a common super class.
+\code{in0} and \code{in1} as long as they are the same subclass of \code{Data}.
 In Section~\ref{sec:parameterization} we will see how to define this
 ourselves.
 
@@ -1705,7 +1691,7 @@ Note that the cases (eg. c1, c2) must be in parentheses.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Polymorphism and Parameterization}
+\section{Polymorphism and \newline Parameterization}
 \label{sec:parameterization}
 
 Scala is a strongly typed language and uses parameterized types to specify generic functions and classes.  
