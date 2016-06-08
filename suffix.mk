@@ -3,20 +3,21 @@ SBT_FLAGS    ?= -Dsbt.log.noformat=true
 
 # If a chiselVersion is defined, use that.
 # Otherwise, use the latest 3.0 release.
-ifneq (,$(chiselVersion))
-SBT_FLAGS += -DchiselVersion="$(chiselVersion)"
-objdirext := _$(chiselVersion)
+ifneq (,$(chisel3Version))
+SBT_FLAGS += -Dchisel3Version="$(chisel3Version)"
 else
-SBT_FLAGS += -DchiselVersion="3.0-BETA-SNAPSHOT"
-objdirext := _3.0
+SBT_FLAGS += -Dchisel3Version="3.0-BETA-SNAPSHOT"
+endif
+ifneq (,$(iotestersVersion))
+SBT_FLAGS += -Dchisel-iotestersVersion="$(iotestersVersion)"
+else
+SBT_FLAGS += -Dchisel-iotestersVersion="1.1-BETA-SNAPSHOT"
 endif
 
 CHISEL_FLAGS ?=
 
 top_srcdir  ?= ..
 srcdir      ?= .
-
-include $(top_srcdir)/objdirroot.mk
 
 # Determine where we are
 curdir	:= $(abspath $(CURDIR))
@@ -52,7 +53,7 @@ default: all
 
 all: outs
 
-tut_outs:	$(objdir)
+$(tut_outs):	$(objdir)
 
 check: $(objdir) $(objdir)/test-solutions.xml
 
@@ -96,4 +97,3 @@ Makefile : ;
 # If we don't have an output directory, here is the rule to make it.
 $(objdir):
 	mkdir -p $@
-	if [ "$(incdir)" ] ;  then cp -p $(addprefix $(incdir)/,$(emulator_includes)) $@ ; fi
