@@ -1,7 +1,7 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.iotesters._
 
 class Combinational extends Module {
   val io = new Bundle {

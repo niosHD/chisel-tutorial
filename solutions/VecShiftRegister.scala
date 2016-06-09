@@ -1,7 +1,7 @@
 package TutorialSolutions
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.iotesters._
 
 class VecShiftRegister extends Module {
   val io = new Bundle {

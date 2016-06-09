@@ -1,7 +1,8 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.util._
+import chisel.iotesters._
 
 //A 4-bit adder with carry in and carry out
 class Adder4 extends Module {

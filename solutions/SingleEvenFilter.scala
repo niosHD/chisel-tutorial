@@ -1,7 +1,8 @@
 package TutorialSolutions
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.util._
+import chisel.iotesters._
 
 abstract class Filter[T <: Data](dtype: T) extends Module {
   val io = new Bundle {

@@ -1,7 +1,7 @@
 package TutorialSolutions
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.iotesters._
 import Counter._
 
 object Counter {

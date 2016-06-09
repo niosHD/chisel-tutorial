@@ -1,7 +1,7 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.iotesters._
 
 object VecSearchTest {
   val pattern = Array(0, 4, 15, 14, 2, 5, 13)

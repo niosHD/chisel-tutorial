@@ -1,7 +1,8 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.util._
+import chisel.iotesters._
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.{Stack => ScalaStack}
 import scala.util.Random

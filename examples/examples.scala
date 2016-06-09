@@ -1,7 +1,7 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.iotesters._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.immutable.HashMap
 

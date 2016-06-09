@@ -1,7 +1,7 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.iotesters._
 
 //A n-bit adder with carry in and carry out
 class Adder(val n:Int) extends Module {

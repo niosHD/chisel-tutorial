@@ -1,7 +1,8 @@
 package TutorialSolutions
 
-import Chisel._
-import Chisel.iotesters._
+import chisel._
+import chisel.util._
+import chisel.iotesters._
 
 class VendingMachineSwitch extends Module {
   val io = new Bundle {

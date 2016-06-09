@@ -1,8 +1,9 @@
 package TutorialExamples
 
-import Chisel._
-import Chisel.iotesters._
-import util.Random
+import chisel._
+import chisel.util._
+import chisel.iotesters._
+import scala.util.Random
 
 class Cell(isBorn: Boolean) extends Module {
   val io = new Bundle {
